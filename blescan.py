@@ -230,7 +230,7 @@ def parse_encounter_event(sock, loop_count=100):
 						print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
 						# commented out - don't know what this byte is.  It's NOT TXPower
 						print "\tDevice Name: ", printpacket(pkt[report_pkt_offset - 6: report_pkt_offset - 3])
-						txpower, = struct.unpack("b", pkt[report_pkt_offset - 2])
+						txpower, = struct.unpack("b", pkt[report_pkt_offset - 3])
 						print "\tTXpower(Unknown):", txpower
 						
 						rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
