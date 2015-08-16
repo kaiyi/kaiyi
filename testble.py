@@ -81,7 +81,7 @@ def read_word_2c(address, adr):
 def main():
 
 	sock = init_ble()
-	rssiDict = ble_scan(sock, 40)
+	rssiDict = ble_scan(sock, 20)
 
 	beaconidList = list()
 	rssiList = list()
