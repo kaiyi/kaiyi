@@ -232,7 +232,7 @@ def parse_encounter_event(sock, loop_count=100):
 						print "\tDevice Name: ", printpacket(pkt[report_pkt_offset - 6: report_pkt_offset - 3])
 						txpower, = struct.unpack("b", pkt[report_pkt_offset - 2])
 						print "\tTXpower(Unknown):", txpower
-						q
+						
 						rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
 						print "\tRSSI:%i"%rssi
 					# build the return string
