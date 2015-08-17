@@ -1,7 +1,7 @@
 #BLE iBeaconScanner based on https://github.com/adamf/BLE/blob/master/ble-scanner.py
 # JCS 06/07/14
 
-DEBUG = True
+DEBUG = False
 # BLE scanner based on https://github.com/adamf/BLE/blob/master/ble-scanner.py
 # BLE scanner, based on https://code.google.com/p/pybluez/source/browse/trunk/examples/advanced/inquiry-with-rssi.py
 
@@ -247,17 +247,33 @@ def parse_encounter_event(sock, loop_count=100):
 						rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
 						print "\tRSSI:%i"%rssi
 					# build the return string
-					Adstring = packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])#MAC
+					name = returnstringpacket( pkt[report_pkt_offset +11: report_pkt_offset -21])
+					cenX = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset -18:-1])
+					cenY = returnstringpacket( pkt[report_pkt_offset -10: report_pkt_offset -14:-1])		
+					stdNorm = returnstringpacket( pkt[report_pkt_offset -6: report_pkt_offset -10:-1])		
+					floor = returnstringpacket( pkt[report_pkt_offset -4: report_pkt_offset -6:-1])
+					trustValue = returnstringpacket( pkt[report_pkt_offset -2: report_pkt_offset -4:-1])
+					rssi = returnstringpacket(pkt[report_pkt_offset -1])
+					
+					#Adstring = packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])#MAC
+					Adstring = name.decode('hex')#Device Name
 					Adstring += ","
-					Adstring += returnstringpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])#UUID 
+					#Adstring += returnstringpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])#UUID 
+					Adstring += "%i" % struct.unpack('!f', cenX.decode('hex'))[0]#Center X
 					Adstring += ","
-					Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])#MAJOR 
+					#Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])#MAJOR
+					Adstring += "%i" % struct.unpack('!f', cenY.decode('hex'))[0]#Center Y
 					Adstring += ","
-					Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])#MINOR 
+					#Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])#MINOR 
+					Adstring += "%i" % struct.unpack('!f', stdNorm.decode('hex'))[0]#std Norm 
 					Adstring += ","
-					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -2])#TXPOWER
+					#Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -2])#TXPOWER
+					Adstring += "%i" % int(floor,16)#Floor
 					Adstring += ","
-					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI
+					Adstring += "%i" % int(trustValue,16)#Trust Value
+					Adstring += ","
+					#Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI
+					Adstring += "%i" % struct.unpack("b", rssi)#RSSI
 
 					#print "\tAdstring=", Adstring
 					myFullList.append(Adstring)

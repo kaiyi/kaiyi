@@ -50,16 +50,16 @@ def ble_scan(sock, num):
 	returnedList = blescan.parse_encounter_event(sock, num)
 	for beacon in returnedList:
 		tmptuple = beacon.split(',')
-		#print tmptuple
+		print tmptuple
 		#uuid = tmptuple[1].lower()
 		#print tmptuple[1][:4]
-		minor = tmptuple[3]
-		idnum = int(tmptuple[2])*100 + int(tmptuple[3])
-		if (uuid == "1534516467ab3e49f9d6e29000000008"): 
+		#minor = tmptuple[3]
+		#idnum = int(tmptuple[2])*100 + int(tmptuple[3])
+		#if (uuid == "1534516467ab3e49f9d6e29000000008"): 
 			#(uuid == 1534516467ab3e49f9d6e29000000008") and (int(minor) in minorlist):
-			rssi = tmptuple[5]
-			print idnum
-			rssiDict[str(idnum)] = rssi
+			#rssi = tmptuple[5]
+			#print idnum
+			#rssiDict[str(idnum)] = rssi
 	return rssiDict	
 
 """def read_byte(address, adr):
