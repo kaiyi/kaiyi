@@ -228,7 +228,7 @@ def parse_events(sock, loop_count=100):
 					
 					pktcheck = struct.unpack("b", pkt[9])
 					checknum = int("1e",16)
-					print "pkt9: %i" % int(pkt[9],16)
+					//print "pkt9: %i" % int(pkt[9],16)
 					print "1e: %i" % int("1e",16)
 					
 					if ( pkt[9] == '\x1e' ):
