@@ -1,7 +1,7 @@
 #BLE iBeaconScanner based on https://github.com/adamf/BLE/blob/master/ble-scanner.py
 # JCS 06/07/14
 
-DEBUG = False
+DEBUG = True
 # BLE scanner based on https://github.com/adamf/BLE/blob/master/ble-scanner.py
 # BLE scanner, based on https://code.google.com/p/pybluez/source/browse/trunk/examples/advanced/inquiry-with-rssi.py
 
@@ -223,8 +223,8 @@ def parse_encounter_event(sock, loop_count=100):
 						#print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
 						#print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
 						#print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
-						name = returnstringpacket( pkt[report_pkt_offset +11: report_pkt_offset -21])
-						print "\Device Name: ", printpacket(pkt[report_pkt_offset +11: report_pkt_offset -21]), " ", name.decode('hex')
+						name = returnstringpacket( pkt[report_pkt_offset +12: report_pkt_offset -21])
+						print "\tDevice Name: ", printpacket(pkt[report_pkt_offset +12: report_pkt_offset -21]), " ", name.decode('hex')
 						cenX = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset -18:-1])
 						print "\tcenX: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset -18:-1]), " ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
 						cenY = returnstringpacket( pkt[report_pkt_offset -10: report_pkt_offset -14:-1])		
@@ -247,7 +247,7 @@ def parse_encounter_event(sock, loop_count=100):
 						rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
 						print "\tRSSI:%i"%rssi
 					# build the return string
-					name = returnstringpacket( pkt[report_pkt_offset +11: report_pkt_offset -21])
+					name = returnstringpacket( pkt[report_pkt_offset +12: report_pkt_offset -21])
 					cenX = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset -18:-1])
 					cenY = returnstringpacket( pkt[report_pkt_offset -10: report_pkt_offset -14:-1])		
 					stdNorm = returnstringpacket( pkt[report_pkt_offset -6: report_pkt_offset -10:-1])		
