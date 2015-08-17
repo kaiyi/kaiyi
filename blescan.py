@@ -62,7 +62,7 @@ def returnstringpacket(pkt):
 	
 def returnlittleindianpacket(pkt):
 	myString = "";
-	tmp = pkt.reverse()
+	tmp = pkt[::-1]
 	for c in tmp:
 		myString +=  "%02x" %struct.unpack("B",c)[0]
 	return myString
