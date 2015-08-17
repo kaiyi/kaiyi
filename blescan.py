@@ -223,6 +223,8 @@ def parse_encounter_event(sock, loop_count=100):
 						#print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
 						#print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
 						#print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
+						name = returnstringpacket( pkt[report_pkt_offset +11: report_pkt_offset -21])
+						print "\Device Name: ", printpacket(pkt[report_pkt_offset +11: report_pkt_offset -21]), " ", name.decode('hex')
 						cenX = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset -18:-1])
 						print "\tcenX: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset -18:-1]), " ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
 						cenY = returnstringpacket( pkt[report_pkt_offset -10: report_pkt_offset -14:-1])		
