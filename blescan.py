@@ -111,6 +111,53 @@ def hci_le_set_scan_parameters(sock):
 	SCAN_TYPE = 0x01
 
 
+#def extract_beacon_data(pkt):
+
+def extract_device_data(pkt):
+	report_pkt_offset = 0
+	
+	if (DEBUG == True):
+		print "-------------"
+		print "\tfullpacket: ", printpacket(pkt)
+		
+		name = returnstringpacket( pkt[report_pkt_offset +12: report_pkt_offset -21])
+		print "\tDevice Name: ", printpacket(pkt[report_pkt_offset +12: report_pkt_offset -21]), " ", name.decode('hex')
+		cenX = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset -18:-1])
+		print "\tcenX: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset -18:-1]), " ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
+		cenY = returnstringpacket( pkt[report_pkt_offset -10: report_pkt_offset -14:-1])		
+		print "\tcenY: ", printpacket(pkt[report_pkt_offset -10: report_pkt_offset -14:-1]), " ", struct.unpack('!f', cenY.decode('hex'))[0]
+		stdNorm = returnstringpacket( pkt[report_pkt_offset -6: report_pkt_offset -10:-1])		
+		print "\tstdNorm: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset -10:-1]), " ", struct.unpack('!f', stdNorm.decode('hex'))[0]
+		floor = returnstringpacket( pkt[report_pkt_offset -4: report_pkt_offset -6:-1])
+		print "\tFloor: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset -6:-1]), " ", int(floor,16)
+		trustValue = returnstringpacket( pkt[report_pkt_offset -2: report_pkt_offset -4:-1])
+		print "\trustValue: ", printpacket(pkt[report_pkt_offset -2: report_pkt_offset -4:-1]), " ", int(trustValue,16)
+		rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
+		print "\tRSSI:%i"%rssi
+		
+	# build the return string
+	name = returnstringpacket( pkt[report_pkt_offset +12: report_pkt_offset -21])
+	cenX = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset -18:-1])
+	cenY = returnstringpacket( pkt[report_pkt_offset -10: report_pkt_offset -14:-1])		
+	stdNorm = returnstringpacket( pkt[report_pkt_offset -6: report_pkt_offset -10:-1])		
+	floor = returnstringpacket( pkt[report_pkt_offset -4: report_pkt_offset -6:-1])
+	trustValue = returnstringpacket( pkt[report_pkt_offset -2: report_pkt_offset -4:-1])
+	
+	Adstring = name.decode('hex')#Device Name
+	Adstring += ","
+	Adstring += "%i" % struct.unpack('!f', cenX.decode('hex'))[0]#Center X
+	Adstring += ","
+	Adstring += "%i" % struct.unpack('!f', cenY.decode('hex'))[0]#Center Y
+	Adstring += ","
+	Adstring += "%i" % struct.unpack('!f', stdNorm.decode('hex'))[0]#std Norm 
+	Adstring += ","
+	Adstring += "%i" % int(floor,16)#Floor
+	Adstring += ","
+	Adstring += "%i" % int(trustValue,16)#Trust Value
+	Adstring += ","
+	Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI
+	
+	return Adstring
 
 def parse_events(sock, loop_count=100):
 	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
@@ -144,10 +191,11 @@ def parse_events(sock, loop_count=100):
 			elif subevent == EVT_LE_ADVERTISING_REPORT:
 				#print "advertising report"
 				num_reports = struct.unpack("B", pkt[0])[0]
-				report_pkt_offset = 0
+				
 				for i in range(0, num_reports):
 
-					if (DEBUG == True):
+					Adstring = extract_device_data(pkt)
+					""""if (DEBUG == True):
 						print "-------------"
 						print "\tfullpacket: ", printpacket(pkt)
 						print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
@@ -172,14 +220,15 @@ def parse_events(sock, loop_count=100):
 					Adstring += ","
 					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -2])#TXPOWER
 					Adstring += ","
-					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI
+					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI"""
 
 					#print "\tAdstring=", Adstring
 					myFullList.append(Adstring)
 				done = True
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	return myFullList
-
+	
+	
 def parse_encounter_event(sock, loop_count=100):
 	print "encounter event function"
 	
@@ -220,9 +269,7 @@ def parse_encounter_event(sock, loop_count=100):
 					if (DEBUG == True):
 						print "-------------"
 						print "\tfullpacket: ", printpacket(pkt)
-						#print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
-						#print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
-						#print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
+						
 						name = returnstringpacket( pkt[report_pkt_offset +12: report_pkt_offset -21])
 						print "\tDevice Name: ", printpacket(pkt[report_pkt_offset +12: report_pkt_offset -21]), " ", name.decode('hex')
 						cenX = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset -18:-1])
@@ -231,21 +278,13 @@ def parse_encounter_event(sock, loop_count=100):
 						print "\tcenY: ", printpacket(pkt[report_pkt_offset -10: report_pkt_offset -14:-1]), " ", struct.unpack('!f', cenY.decode('hex'))[0]
 						stdNorm = returnstringpacket( pkt[report_pkt_offset -6: report_pkt_offset -10:-1])		
 						print "\tstdNorm: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset -10:-1]), " ", struct.unpack('!f', stdNorm.decode('hex'))[0]
-						
 						floor = returnstringpacket( pkt[report_pkt_offset -4: report_pkt_offset -6:-1])
 						print "\tFloor: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset -6:-1]), " ", int(floor,16)
 						trustValue = returnstringpacket( pkt[report_pkt_offset -2: report_pkt_offset -4:-1])
 						print "\trustValue: ", printpacket(pkt[report_pkt_offset -2: report_pkt_offset -4:-1]), " ", int(trustValue,16)
-						
-						#print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
-						# commented out - don't know what this byte is.  It's NOT TXPower
-						#print "\tDevice Name: ", printpacket(pkt[report_pkt_offset - 3: report_pkt_offset - 6:-1])
-						#txpower, = struct.unpack("b", pkt[report_pkt_offset - 2])
-						#txpower = returnstringpacket( pkt[report_pkt_offset -2])
-						#print "\tTXpower(Unknown):", txpower, " ", int(txpower,16)
-						
 						rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
 						print "\tRSSI:%i"%rssi
+						
 					# build the return string
 					name = returnstringpacket( pkt[report_pkt_offset +12: report_pkt_offset -21])
 					cenX = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset -18:-1])
@@ -253,28 +292,21 @@ def parse_encounter_event(sock, loop_count=100):
 					stdNorm = returnstringpacket( pkt[report_pkt_offset -6: report_pkt_offset -10:-1])		
 					floor = returnstringpacket( pkt[report_pkt_offset -4: report_pkt_offset -6:-1])
 					trustValue = returnstringpacket( pkt[report_pkt_offset -2: report_pkt_offset -4:-1])
-					#rssi = returnstringpacket(pkt[report_pkt_offset -1])
 					
-					#Adstring = packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])#MAC
 					Adstring = name.decode('hex')#Device Name
 					Adstring += ","
-					#Adstring += returnstringpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])#UUID 
 					Adstring += "%i" % struct.unpack('!f', cenX.decode('hex'))[0]#Center X
 					Adstring += ","
-					#Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])#MAJOR
 					Adstring += "%i" % struct.unpack('!f', cenY.decode('hex'))[0]#Center Y
 					Adstring += ","
-					#Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])#MINOR 
 					Adstring += "%i" % struct.unpack('!f', stdNorm.decode('hex'))[0]#std Norm 
 					Adstring += ","
-					#Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -2])#TXPOWER
 					Adstring += "%i" % int(floor,16)#Floor
 					Adstring += ","
 					Adstring += "%i" % int(trustValue,16)#Trust Value
 					Adstring += ","
 					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI
-					#Adstring += "%i" % struct.unpack("b", rssi)#RSSI
-
+					
 					#print "\tAdstring=", Adstring
 					myFullList.append(Adstring)
 				done = True
