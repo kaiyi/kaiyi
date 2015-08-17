@@ -231,7 +231,7 @@ def parse_events(sock, loop_count=100):
 					print "pkt9: %i" % struct.unpack("b", pkt[9])
 					print "1e: %i" % int("1e",16)
 					
-					if pktcheck != checknum:
+					if ( pktcheck == checknum ):
 						Adstring = extract_beacon_data(pkt)
 					else:
 						Adstring = extract_device_data(pkt)
