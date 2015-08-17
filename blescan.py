@@ -222,10 +222,11 @@ def parse_encounter_event(sock, loop_count=100):
 						#print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
 						#print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
 						#print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
-						print "\tcenY: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 18])
-						print "\tcenX: ", printpacket(pkt[report_pkt_offset -18: report_pkt_offset - 14])
-						print "\tstdY: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset - 10])
-						print "\tstdX: ", printpacket(pkt[report_pkt_offset -10: report_pkt_offset - 6])
+						cenX, = struct.unpack('!f',pkt[report_pkt_offset -22: report_pkt_offset - 18].decode('hex'))[0]
+						print "\tcenX: ", cenX#printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 18])
+						print "\tcenY: ", printpacket(pkt[report_pkt_offset -18: report_pkt_offset - 14])
+						print "\tstdX: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset - 10])
+						print "\tstdY: ", printpacket(pkt[report_pkt_offset -10: report_pkt_offset - 6])
 						
 						print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
 						# commented out - don't know what this byte is.  It's NOT TXPower
