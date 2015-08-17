@@ -111,7 +111,37 @@ def hci_le_set_scan_parameters(sock):
 	SCAN_TYPE = 0x01
 
 
-#def extract_beacon_data(pkt):
+def extract_beacon_data(pkt):
+	report_pkt_offset = 0
+	
+	if (DEBUG == True):
+		print "-------------"
+		print "\tfullpacket: ", printpacket(pkt)
+		print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
+		print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
+		print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
+		print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
+		# commented out - don't know what this byte is.  It's NOT TXPower
+		print "\tDevice Name: ", printpacket(pkt[report_pkt_offset - 5: report_pkt_offset - 3])
+		txpower, = struct.unpack("b", pkt[report_pkt_offset - 2])
+		print "\tTXpower(Unknown):", txpower
+		
+		rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
+		print "\tRSSI:%i"%rssi
+	# build the return string
+	Adstring = packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])#MAC
+	Adstring += ","
+	Adstring += returnstringpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])#UUID 
+	Adstring += ","
+	Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])#MAJOR 
+	Adstring += ","
+	Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])#MINOR 
+	Adstring += ","
+	Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -2])#TXPOWER
+	Adstring += ","
+	Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI
+	
+	return Adstring
 
 def extract_device_data(pkt):
 	report_pkt_offset = 0
@@ -194,33 +224,11 @@ def parse_events(sock, loop_count=100):
 				
 				for i in range(0, num_reports):
 
-					Adstring = extract_device_data(pkt)
-					""""if (DEBUG == True):
-						print "-------------"
-						print "\tfullpacket: ", printpacket(pkt)
-						print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
-						print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
-						print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
-						print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
-						# commented out - don't know what this byte is.  It's NOT TXPower
-						print "\tDevice Name: ", printpacket(pkt[report_pkt_offset - 5: report_pkt_offset - 3])
-						txpower, = struct.unpack("b", pkt[report_pkt_offset - 2])
-						print "\tTXpower(Unknown):", txpower
-						
-						rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
-						print "\tRSSI:%i"%rssi
-					# build the return string
-					Adstring = packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])#MAC
-					Adstring += ","
-					Adstring += returnstringpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])#UUID 
-					Adstring += ","
-					Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])#MAJOR 
-					Adstring += ","
-					Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])#MINOR 
-					Adstring += ","
-					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -2])#TXPOWER
-					Adstring += ","
-					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI"""
+					if pkt[9] == 0x1e:
+						Adstring = extract_beacon_data(pkt)
+					else:
+						Adstring = extract_device_data(pkt)
+					
 
 					#print "\tAdstring=", Adstring
 					myFullList.append(Adstring)
