@@ -182,6 +182,7 @@ def parse_events(sock, loop_count=100):
 
 def parse_encounter_event(sock, loop_count=100):
 	print "encounter event function"
+	
 	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
 	
 	# perform a device inquiry on bluetooth device #0
@@ -214,43 +215,45 @@ def parse_encounter_event(sock, loop_count=100):
 				#print "advertising report"
 				num_reports = struct.unpack("B", pkt[0])[0]
 				report_pkt_offset = 0
-				for i in range(0, num_reports):
+				
+				if pkt[9] == '1b':
+					for i in range(0, num_reports):
 
-					if (DEBUG == True):
-						print "-------------"
-						print "\tfullpacket: ", printpacket(pkt)
-						#print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
-						#print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
-						#print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
-						cenX = returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
-						print "\tcenX: ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
-						print "\tcenY: ", printpacket(pkt[report_pkt_offset -18: report_pkt_offset - 14])
-						print "\tstdX: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset - 10])
-						print "\tstdY: ", printpacket(pkt[report_pkt_offset -10: report_pkt_offset - 6])
-						
-						print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
-						# commented out - don't know what this byte is.  It's NOT TXPower
-						print "\tDevice Name: ", printpacket(pkt[report_pkt_offset - 6: report_pkt_offset - 3])
-						txpower, = struct.unpack("b", pkt[report_pkt_offset - 3])
-						print "\tTXpower(Unknown):", txpower
-						
-						rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
-						print "\tRSSI:%i"%rssi
-					# build the return string
-					Adstring = packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])#MAC
-					Adstring += ","
-					Adstring += returnstringpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])#UUID 
-					Adstring += ","
-					Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])#MAJOR 
-					Adstring += ","
-					Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])#MINOR 
-					Adstring += ","
-					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -2])#TXPOWER
-					Adstring += ","
-					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI
+						if (DEBUG == True):
+							print "-------------"
+							print "\tfullpacket: ", printpacket(pkt)
+							#print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
+							#print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
+							#print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
+							cenX = returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
+							print "\tcenX: ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
+							print "\tcenY: ", printpacket(pkt[report_pkt_offset -18: report_pkt_offset - 14])
+							print "\tstdX: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset - 10])
+							print "\tstdY: ", printpacket(pkt[report_pkt_offset -10: report_pkt_offset - 6])
+							
+							print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
+							# commented out - don't know what this byte is.  It's NOT TXPower
+							print "\tDevice Name: ", printpacket(pkt[report_pkt_offset - 6: report_pkt_offset - 3])
+							txpower, = struct.unpack("b", pkt[report_pkt_offset - 3])
+							print "\tTXpower(Unknown):", txpower
+							
+							rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
+							print "\tRSSI:%i"%rssi
+						# build the return string
+						Adstring = packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])#MAC
+						Adstring += ","
+						Adstring += returnstringpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])#UUID 
+						Adstring += ","
+						Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])#MAJOR 
+						Adstring += ","
+						Adstring += "%i" % returnnumberpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])#MINOR 
+						Adstring += ","
+						Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -2])#TXPOWER
+						Adstring += ","
+						Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI
 
-					#print "\tAdstring=", Adstring
-					myFullList.append(Adstring)
+						#print "\tAdstring=", Adstring
+						myFullList.append(Adstring)
 				done = True
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	return myFullList
