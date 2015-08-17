@@ -224,7 +224,7 @@ def parse_events(sock, loop_count=100):
 				
 				for i in range(0, num_reports):
 
-					if pkt[9] == 0x1e:
+					if pkt[9] == 1e:
 						Adstring = extract_beacon_data(pkt)
 					else:
 						Adstring = extract_device_data(pkt)
