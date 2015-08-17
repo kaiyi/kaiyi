@@ -265,8 +265,8 @@ def parse_encounter_event(sock, loop_count=100):
 				num_reports = struct.unpack("B", pkt[0])[0]
 				report_pkt_offset = 0
 				for i in range(0, num_reports):
-
-					if (DEBUG == True):
+					Adstring = extract_device_data(pkt)
+					""""if (DEBUG == True):
 						print "-------------"
 						print "\tfullpacket: ", printpacket(pkt)
 						
@@ -305,7 +305,7 @@ def parse_encounter_event(sock, loop_count=100):
 					Adstring += ","
 					Adstring += "%i" % int(trustValue,16)#Trust Value
 					Adstring += ","
-					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI
+					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI"""
 					
 					#print "\tAdstring=", Adstring
 					myFullList.append(Adstring)
