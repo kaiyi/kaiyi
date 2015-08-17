@@ -223,19 +223,19 @@ def parse_encounter_event(sock, loop_count=100):
 						#print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
 						#print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
 						#print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
-						cenX = returnstringpacket( pkt[report_pkt_offset +24: report_pkt_offset + 20:-1])
-						print "\tcenX: ", printpacket(pkt[report_pkt_offset +24: report_pkt_offset +20:-1]), " ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
-						cenY = returnstringpacket( pkt[report_pkt_offset +28: report_pkt_offset +24:-1])		
-						print "\tcenY: ", printpacket(pkt[report_pkt_offset +28: report_pkt_offset +24:-1]), " ", struct.unpack('!f', cenY.decode('hex'))[0]
-						stdNorm = returnstringpacket( pkt[report_pkt_offset +32: report_pkt_offset +28:-1])		
-						print "\tstdNorm: ", printpacket(pkt[report_pkt_offset +32: report_pkt_offset +28:-1]), " ", struct.unpack('!f', stdNorm.decode('hex'))[0]
+						cenX = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset -18:-1])
+						print "\tcenX: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset -18:-1]), " ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
+						cenY = returnstringpacket( pkt[report_pkt_offset -10: report_pkt_offset -14:-1])		
+						print "\tcenY: ", printpacket(pkt[report_pkt_offset -10: report_pkt_offset -14:-1]), " ", struct.unpack('!f', cenY.decode('hex'))[0]
+						stdNorm = returnstringpacket( pkt[report_pkt_offset -6: report_pkt_offset -10:-1])		
+						print "\tstdNorm: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset -10:-1]), " ", struct.unpack('!f', stdNorm.decode('hex'))[0]
 						
-						floor = returnstringpacket( pkt[report_pkt_offset +34: report_pkt_offset +32:-1])
-						print "\tFloor: ", printpacket(pkt[report_pkt_offset +34: report_pkt_offset +32:-1]), " ", int(floor,16)
-						trustValue = returnstringpacket( pkt[report_pkt_offset +36: report_pkt_offset +34:-1])
-						print "\trustValue: ", printpacket(pkt[report_pkt_offset +36: report_pkt_offset +34:-1]), " ", int(trustValue,16)
+						floor = returnstringpacket( pkt[report_pkt_offset -4: report_pkt_offset -6:-1])
+						print "\tFloor: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset -6:-1]), " ", int(floor,16)
+						trustValue = returnstringpacket( pkt[report_pkt_offset -2: report_pkt_offset -4:-1])
+						print "\trustValue: ", printpacket(pkt[report_pkt_offset -2: report_pkt_offset -4:-1]), " ", int(trustValue,16)
 						
-						print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
+						#print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
 						# commented out - don't know what this byte is.  It's NOT TXPower
 						#print "\tDevice Name: ", printpacket(pkt[report_pkt_offset - 3: report_pkt_offset - 6:-1])
 						#txpower, = struct.unpack("b", pkt[report_pkt_offset - 2])
