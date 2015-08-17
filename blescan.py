@@ -223,18 +223,19 @@ def parse_encounter_event(sock, loop_count=100):
 						#print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
 						#print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
 						#print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
-						cenX = returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
-						print "\tcenX: ", printpacket(pkt[report_pkt_offset -18: report_pkt_offset - 14]), " ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
-						print "\tcenY: ", printpacket(pkt[report_pkt_offset -18: report_pkt_offset - 14])
+						cenX = returnstringpacket( pkt[report_pkt_offset -18: report_pkt_offset - 22])
+						print "\tcenX: ", printpacket(pkt[report_pkt_offset -18: report_pkt_offset - 22]), " ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
+						cenY = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset - 18])		
+						print "\tcenY: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset - 18]), " ", struct.unpack('!f', cenY.decode('hex'))[0]
 						print "\tstdX: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset - 10])
 						print "\tstdY: ", printpacket(pkt[report_pkt_offset -10: report_pkt_offset - 6])
 						
 						print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
 						# commented out - don't know what this byte is.  It's NOT TXPower
 						print "\tDevice Name: ", printpacket(pkt[report_pkt_offset - 6: report_pkt_offset - 3])
-						#txpower, = struct.unpack("b", pkt[report_pkt_offset - 2])
-						txpower = returnstringpacket( pkt[report_pkt_offset -3: report_pkt_offset - 1])
-						print "\tTXpower(Unknown):", int(txpower,16)
+						txpower, = struct.unpack("b", pkt[report_pkt_offset - 2])
+						#txpower = returnstringpacket( pkt[report_pkt_offset -3: report_pkt_offset - 1])
+						print "\tTXpower(Unknown):", txpower#int(txpower,16)
 						
 						rssi, = struct.unpack("b", pkt[report_pkt_offset -1])
 						print "\tRSSI:%i"%rssi
