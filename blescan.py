@@ -223,12 +223,12 @@ def parse_encounter_event(sock, loop_count=100):
 						#print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
 						#print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
 						#print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
-						cenX = returnstringpacket( pkt[report_pkt_offset -18: report_pkt_offset - 22:-1])
-						print "\tcenX: ", printpacket(pkt[report_pkt_offset -18: report_pkt_offset - 22:-1]), " ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
-						cenY = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset - 18:-1])		
-						print "\tcenY: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset - 18:-1]), " ", struct.unpack('!f', cenY.decode('hex'))[0]
-						stdNorm = returnstringpacket( pkt[report_pkt_offset -10: report_pkt_offset - 14:-1])		
-						print "\tstdNorm: ", printpacket(pkt[report_pkt_offset -10: report_pkt_offset - 14:-1]), " ", struct.unpack('!f', stdNorm.decode('hex'))[0]
+						cenX = returnstringpacket( pkt[report_pkt_offset +22: report_pkt_offset + 26:-1])
+						print "\tcenX: ", printpacket(pkt[report_pkt_offset +22: report_pkt_offset +26:-1]), " ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
+						cenY = returnstringpacket( pkt[report_pkt_offset +26: report_pkt_offset +30:-1])		
+						print "\tcenY: ", printpacket(pkt[report_pkt_offset +26: report_pkt_offset +30:-1]), " ", struct.unpack('!f', cenY.decode('hex'))[0]
+						stdNorm = returnstringpacket( pkt[report_pkt_offset +30: report_pkt_offset +34:-1])		
+						print "\tstdNorm: ", printpacket(pkt[report_pkt_offset +30: report_pkt_offset +34:-1]), " ", struct.unpack('!f', stdNorm.decode('hex'))[0]
 						
 						floor = returnstringpacket( pkt[report_pkt_offset -8: report_pkt_offset - 10:-1])
 						print "\tFloor: ", printpacket(pkt[report_pkt_offset -8: report_pkt_offset - 10:-1]), " ", int(floor,16)
