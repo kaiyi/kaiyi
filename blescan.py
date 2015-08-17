@@ -227,8 +227,12 @@ def parse_encounter_event(sock, loop_count=100):
 						print "\tcenX: ", printpacket(pkt[report_pkt_offset -18: report_pkt_offset - 22]), " ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
 						cenY = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset - 18])		
 						print "\tcenY: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset - 18]), " ", struct.unpack('!f', cenY.decode('hex'))[0]
-						print "\tstdX: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset - 10])
-						print "\tstdY: ", printpacket(pkt[report_pkt_offset -10: report_pkt_offset - 6])
+						stdNorm = returnstringpacket( pkt[report_pkt_offset -10: report_pkt_offset - 14])		
+						print "\tstdNorm: ", printpacket(pkt[report_pkt_offset -10: report_pkt_offset - 14]), " ", struct.unpack('!f', stdNorm.decode('hex'))[0]
+						floor = returnstringpacket( pkt[report_pkt_offset -9: report_pkt_offset - 11])
+						print "\Floor: ", printpacket(pkt[report_pkt_offset -9: report_pkt_offset - 11]), " ", int(floor,16)
+						trustValue = returnstringpacket( pkt[report_pkt_offset -7: report_pkt_offset - 9])
+						print "\trustValue: ", printpacket(pkt[report_pkt_offset -7: report_pkt_offset - 9]), " ", int(trustValue,16)
 						
 						print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
 						# commented out - don't know what this byte is.  It's NOT TXPower
