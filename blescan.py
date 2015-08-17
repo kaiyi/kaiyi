@@ -1,7 +1,7 @@
 #BLE iBeaconScanner based on https://github.com/adamf/BLE/blob/master/ble-scanner.py
 # JCS 06/07/14
 
-DEBUG = True
+DEBUG = False
 # BLE scanner based on https://github.com/adamf/BLE/blob/master/ble-scanner.py
 # BLE scanner, based on https://code.google.com/p/pybluez/source/browse/trunk/examples/advanced/inquiry-with-rssi.py
 
@@ -224,8 +224,8 @@ def parse_events(sock, loop_count=100):
 				
 				for i in range(0, num_reports):
 
-					print pkt[9]
-					if pkt[9] == 0x1e:
+					print "%i", %returnnumberpacket(pkt[9])
+					if pkt[9] == "1e":
 						Adstring = extract_beacon_data(pkt)
 					else:
 						Adstring = extract_device_data(pkt)
