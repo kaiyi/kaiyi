@@ -224,12 +224,7 @@ def parse_events(sock, loop_count=100):
 				
 				for i in range(0, num_reports):
 
-					print "fullpacket: ", printpacket(pkt)
-					
-					pktcheck = struct.unpack("b", pkt[9])
-					checknum = int("1e",16)
-					#print "pkt9: %i" % int(pkt[9],16)
-					print "1e: %i" % int("1e",16)
+					#print "fullpacket: ", printpacket(pkt)
 					
 					if ( pkt[9] == '\x1e' ):
 						Adstring = extract_beacon_data(pkt)
