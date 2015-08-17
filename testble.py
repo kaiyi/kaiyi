@@ -50,7 +50,7 @@ def ble_scan(sock, num):
 	returnedList = blescan.parse_encounter_event(sock, num)
 	for beacon in returnedList:
 		tmptuple = beacon.split(',')
-		print tmptuple
+		#print tmptuple
 		#uuid = tmptuple[1].lower()
 		#print tmptuple[1][:4]
 		minor = tmptuple[3]
