@@ -223,7 +223,7 @@ def parse_encounter_event(sock, loop_count=100):
 						#print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
 						#print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
 						cenX = returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
-						print "\tcenX: ", cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
+						print "\tcenX: ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
 						print "\tcenY: ", printpacket(pkt[report_pkt_offset -18: report_pkt_offset - 14])
 						print "\tstdX: ", printpacket(pkt[report_pkt_offset -14: report_pkt_offset - 10])
 						print "\tstdY: ", printpacket(pkt[report_pkt_offset -10: report_pkt_offset - 6])
