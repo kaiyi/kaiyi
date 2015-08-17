@@ -59,6 +59,13 @@ def returnstringpacket(pkt):
 	for c in pkt:
 		myString +=  "%02x" %struct.unpack("B",c)[0]
 	return myString 
+	
+def returnlittleindianpacket(pkt):
+	myString = "";
+	tmp = pkt.reverse()
+	for c in tmp:
+		myString +=  "%02x" %struct.unpack("B",c)[0]
+	return myString
 
 def printpacket(pkt):
 	for c in pkt:
@@ -223,16 +230,16 @@ def parse_encounter_event(sock, loop_count=100):
 						#print "\tUDID: ", printpacket(pkt[report_pkt_offset -22: report_pkt_offset - 6])
 						#print "\tMAJOR: ", printpacket(pkt[report_pkt_offset -6: report_pkt_offset - 4])
 						#print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
-						cenX = returnstringpacket( pkt[report_pkt_offset -18: report_pkt_offset - 22])
+						cenX = returnlittleindianpacket( pkt[report_pkt_offset -18: report_pkt_offset - 22])
 						print "\tcenX: ", cenX#printpacket(pkt[report_pkt_offset -18: report_pkt_offset - 22]), " ", struct.unpack('!f', cenX.decode('hex'))[0]#cenX#returnstringpacket( pkt[report_pkt_offset -22: report_pkt_offset - 18])
-						cenY = returnstringpacket( pkt[report_pkt_offset -14: report_pkt_offset - 18])		
+						cenY = returnlittleindianpacket( pkt[report_pkt_offset -14: report_pkt_offset - 18])		
 						print "\tcenY: ", #printpacket(pkt[report_pkt_offset -14: report_pkt_offset - 18]), " ", struct.unpack('!f', cenY.decode('hex'))[0]
-						stdNorm = returnstringpacket( pkt[report_pkt_offset -10: report_pkt_offset - 14])		
+						stdNorm = returnlittleindianpacket( pkt[report_pkt_offset -10: report_pkt_offset - 14])		
 						print "\tstdNorm: ", #printpacket(pkt[report_pkt_offset -10: report_pkt_offset - 14]), " ", struct.unpack('!f', stdNorm.decode('hex'))[0]
-						floor = returnstringpacket( pkt[report_pkt_offset -9: report_pkt_offset - 11])
-						print "\Floor: ", #printpacket(pkt[report_pkt_offset -9: report_pkt_offset - 11]), " ", int(floor,16)
-						trustValue = returnstringpacket( pkt[report_pkt_offset -7: report_pkt_offset - 9])
-						print "\trustValue: ", #printpacket(pkt[report_pkt_offset -7: report_pkt_offset - 9]), " ", int(trustValue,16)
+						floor = returnlittleindianpacket( pkt[report_pkt_offset -9: report_pkt_offset - 11])
+						print "\tFloor: ", #printpacket(pkt[report_pkt_offset -9: report_pkt_offset - 11]), " ", int(floor,16)
+						trustValue = returnlittleindianpacket( pkt[report_pkt_offset -7: report_pkt_offset - 9])
+						print "\ttrustValue: ", #printpacket(pkt[report_pkt_offset -7: report_pkt_offset - 9]), " ", int(trustValue,16)
 						
 						print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
 						# commented out - don't know what this byte is.  It's NOT TXPower
