@@ -253,7 +253,7 @@ def parse_encounter_event(sock, loop_count=100):
 					stdNorm = returnstringpacket( pkt[report_pkt_offset -6: report_pkt_offset -10:-1])		
 					floor = returnstringpacket( pkt[report_pkt_offset -4: report_pkt_offset -6:-1])
 					trustValue = returnstringpacket( pkt[report_pkt_offset -2: report_pkt_offset -4:-1])
-					rssi = returnstringpacket(pkt[report_pkt_offset -1])
+					#rssi = returnstringpacket(pkt[report_pkt_offset -1])
 					
 					#Adstring = packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])#MAC
 					Adstring = name.decode('hex')#Device Name
@@ -272,8 +272,8 @@ def parse_encounter_event(sock, loop_count=100):
 					Adstring += ","
 					Adstring += "%i" % int(trustValue,16)#Trust Value
 					Adstring += ","
-					#Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI
-					Adstring += "%i" % struct.unpack("b", rssi)#RSSI
+					Adstring += "%i" % struct.unpack("b", pkt[report_pkt_offset -1])#RSSI
+					#Adstring += "%i" % struct.unpack("b", rssi)#RSSI
 
 					#print "\tAdstring=", Adstring
 					myFullList.append(Adstring)
