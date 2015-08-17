@@ -224,8 +224,9 @@ def parse_events(sock, loop_count=100):
 				
 				for i in range(0, num_reports):
 
+					print "\tfullpacket: ", printpacket(pkt)
 					print "%i" % struct.unpack("b", pkt[9])
-					if pkt[9] == "1e":
+					if struct.unpack("b", pkt[9]) == int("1e",16):
 						Adstring = extract_beacon_data(pkt)
 					else:
 						Adstring = extract_device_data(pkt)
