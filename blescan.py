@@ -60,10 +60,10 @@ def returnstringpacket(pkt):
 		myString +=  "%02x" %struct.unpack("B",c)[0]
 	return myString 
 	
-def returnlittleindianpacket(pkt):
+def returnreversepacket(pkt):
 	myString = "";
-	tmp = pkt[::-1]
-	for c in tmp:
+	#tmp = pkt[::-1]
+	for c in pkt.reverse():
 		myString +=  "%02x" %struct.unpack("B",c)[0]
 	return myString
 
