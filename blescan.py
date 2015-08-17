@@ -254,7 +254,7 @@ def parse_encounter_event(sock, loop_count=100):
 
 						#print "\tAdstring=", Adstring
 						myFullList.append(Adstring)
-				done = True
+					done = True
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	return myFullList
 	
