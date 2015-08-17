@@ -47,7 +47,7 @@ def init_ble():
 
 def ble_scan(sock, num):
 	rssiDict = dict()
-	returnedList = blescan.parse_event(sock, num)
+	returnedList = blescan.parse_events(sock, num)
 	for beacon in returnedList:
 		tmptuple = beacon.split(',')
 		print tmptuple
