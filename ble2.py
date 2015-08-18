@@ -74,7 +74,7 @@ def BleAdvertise():
 	print "Advertise Finish"
 	t.cancle()
 
-def BleStart():
+def main():
 	while 1:
 		BleConfig()
 		BleScan()
@@ -87,31 +87,6 @@ def BleStart():
 		BleAdvertise()
 
 		print "done"
-
-def main():
-
-	sock = init_ble()
-	rssiDict = ble_scan(sock, 20)
-
-	beaconidList = list()
-	rssiList = list()
-	#mybaro = '{0:0.2f}'.format(sensor.read_pressure()) 
-	#print mybaro 
-	for beaconid in rssiDict:
-		beaconidList.append( beaconid )
-		rssiList.append( rssiDict[beaconid] )
-
-	 #pos, stdX, stdY, floor=  positioning.initPosition(beaconidList, rssiList);
-	 #url = serverAddr + "nctu.hscc.cplin.jersey/rest/hello?" + clientidParam +"&pos="+pos+"&StdX="+str(stdX)+"&StdY="+str(stdY)+"&floor=" + str(floor)
-	 #print url
-	 #r = requests.get(url)
-	 #print(r.text)
-	 #refbaro = float(r.text)
-	 #floor =  positioning.initPressure(mybaro, refbaro);
-	 #print("floor="+str(floor))
-	 
-	 #init_imu()
-	 #check_step(sock)
 
 
 if __name__ == "__main__":
