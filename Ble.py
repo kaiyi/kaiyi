@@ -26,12 +26,12 @@ def init_ble():
 
 	return sock
 
-def ble_scan(sock, num):
+def ble_scan(sock):
 	rssiDict = dict()
-	returnedList = blescan.parse_events(sock, num)
-	for beacon in returnedList:
-		tmptuple = beacon.split(',')
-		print tmptuple
+	returnedList = blescan.parse_events(sock)
+	#for beacon in returnedList:
+		#tmptuple = beacon.split(',')
+	print tmptuple
 		#uuid = tmptuple[1].lower()
 		#print tmptuple[1][:4]
 		#minor = tmptuple[3]
@@ -103,7 +103,7 @@ def main():
 		print ( cur_time - SYS_TIME )
 		if ( cur_time - SYS_TIME >= SCAN_TIME ):
 			break
-		rssiDict = ble_scan(sock, 1)
+		rssiDict = ble_scan(sock)
 		cur_time = time.time()
 
 	beaconidList = list()

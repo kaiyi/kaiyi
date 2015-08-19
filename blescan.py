@@ -190,7 +190,7 @@ def extract_device_data(pkt):
 	
 	return Adstring
 
-def parse_events(sock, loop_count=100):
+def parse_events(sock):
 	
 
 	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
@@ -206,40 +206,39 @@ def parse_events(sock, loop_count=100):
 	done = False
 	results = []
 	myFullList = []
-	for i in range(0, loop_count):
-		
-		
-		pkt = sock.recv(255)
-		ptype, event, plen = struct.unpack("BBB", pkt[:3])
-		#print "--------------" 
-		if event == bluez.EVT_INQUIRY_RESULT_WITH_RSSI:
-			i =0
-		elif event == bluez.EVT_NUM_COMP_PKTS:
-			i =0 
-		elif event == bluez.EVT_DISCONN_COMPLETE:
-			i =0 
-		elif event == LE_META_EVENT:
-			subevent, = struct.unpack("B", pkt[3])
-			pkt = pkt[4:]
-			if subevent == EVT_LE_CONN_COMPLETE:
-				le_handle_connection_complete(pkt)
-			elif subevent == EVT_LE_ADVERTISING_REPORT:
-				#print "advertising report"
-				num_reports = struct.unpack("B", pkt[0])[0]
+	#for i in range(0, loop_count):
+			
+	pkt = sock.recv(255)
+	ptype, event, plen = struct.unpack("BBB", pkt[:3])
+	#print "--------------" 
+	if event == bluez.EVT_INQUIRY_RESULT_WITH_RSSI:
+		i =0
+	elif event == bluez.EVT_NUM_COMP_PKTS:
+		i =0 
+	elif event == bluez.EVT_DISCONN_COMPLETE:
+		i =0 
+	elif event == LE_META_EVENT:
+		subevent, = struct.unpack("B", pkt[3])
+		pkt = pkt[4:]
+		if subevent == EVT_LE_CONN_COMPLETE:
+			le_handle_connection_complete(pkt)
+		elif subevent == EVT_LE_ADVERTISING_REPORT:
+			#print "advertising report"
+			num_reports = struct.unpack("B", pkt[0])[0]
+			
+			for i in range(0, num_reports):
+
+				#print "fullpacket: ", printpacket(pkt)
 				
-				for i in range(0, num_reports):
+				if ( pkt[9] == '\x1e' ):
+					Adstring = extract_beacon_data(pkt)
+				else:
+					Adstring = extract_device_data(pkt)
+				
 
-					#print "fullpacket: ", printpacket(pkt)
-					
-					if ( pkt[9] == '\x1e' ):
-						Adstring = extract_beacon_data(pkt)
-					else:
-						Adstring = extract_device_data(pkt)
-					
-
-					#print "\tAdstring=", Adstring
-					myFullList.append(Adstring)
-				done = True
+				#print "\tAdstring=", Adstring
+				#myFullList.append(Adstring)
+			done = True
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
-	return myFullList
+	return Adstring
 	
