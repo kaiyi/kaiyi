@@ -60,6 +60,8 @@ SCAN_TIME = 0.9
 SYS_TIME = 0
 
 PKT_QUEUE = Queue.Queue()
+l_device = []
+l_beacon = []
 
 def returnnumberpacket(pkt):
 	myInteger = 0
@@ -204,29 +206,12 @@ def extract_device_data(pkt):
 	return Adstring
 
 def parse_events():
-	
-
-	""""old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
-	
-	# perform a device inquiry on bluetooth device #0
-	# The inquiry should last 8 * 1.28 = 10.24 seconds
-	# before the inquiry is performed, bluez should flush its cache of
-	# previously discovered devices
-	flt = bluez.hci_filter_new()
-	bluez.hci_filter_all_events(flt)
-	bluez.hci_filter_set_ptype(flt, bluez.HCI_EVENT_PKT)
-	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, flt )
-	done = False
-	results = []
-	myFullList = []
-	#for i in range(0, loop_count):"""
-
 		
 	pkt = PKT_QUEUE.get()
 	ptype, event, plen = struct.unpack("BBB", pkt[:3])
 	#print "--------------"
 	
-	AdstringStr = ""
+	Adstring = ""
 	
 	if event == bluez.EVT_INQUIRY_RESULT_WITH_RSSI:
 		i =0
@@ -252,15 +237,8 @@ def parse_events():
 					Adstring = extract_device_data(pkt)
 				else:
 					Adstring = extract_beacon_data(pkt)
-				
-				AdstringStr = Adstring.split(",")
-				#print "\tAdstring=", Adstring
-				#myFullList.append(Adstring)
-			#done = True
-	#sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
-	
-	#print AdstringStr
-	return AdstringStr
+
+	return Adstring.split(",")
 
 
 def init_ble():
@@ -276,46 +254,12 @@ def init_ble():
 
 	return sock
 
-def ble_scan(sock):
 
-	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
 	
-	# perform a device inquiry on bluetooth device #0
-	# The inquiry should last 8 * 1.28 = 10.24 seconds
-	# before the inquiry is performed, bluez should flush its cache of
-	# previously discovered devices
-	flt = bluez.hci_filter_new()
-	bluez.hci_filter_all_events(flt)
-	bluez.hci_filter_set_ptype(flt, bluez.HCI_EVENT_PKT)
-	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, flt )
-	#done = False
-	#results = []
-	#myFullList = []
-	#for i in range(0, loop_count):
-	
-	SYS_TIME = time.time()
-	cur_time = time.time()
-		
-	while 1:
-		#print ( cur_time - SYS_TIME )
-		if ( cur_time - SYS_TIME >= SCAN_TIME ):
-			break
-		pkt = sock.recv(255)
-		print "\tfullpacket: ", printpacket(pkt)
-		PKT_QUEUE.put(pkt)
-		#print ble_data
-		cur_time = time.time()
-		
-	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
+
 #----------------------------------------------------------------------
 
-def ScanTimeout( p ):
-	if p.isAlive:
-		print "Go Terminate pid=%d"%p.pid
-		#os.kill(p.pid, signal.SIGINT)
-		#p.
-
-def AdvUndo( p ):
+def adv_undo( p ):
 	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
 
 def BleConfig():
@@ -354,42 +298,63 @@ def BleScan(sock):
 		
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	
+	while not PKT_QUEUE.empty():
+		Str = parse_events()
+		#print len(Str)
+		if len(Str) == 7 :
+			l_device.append(Str)
+		elif len(Str) == 6:
+			l_beacon.append(Str)
+			
+	#print 'Devices',
+	#print '\n\t'.join([repr(x) for x in l_device])
+	#print 'Beacons',
+	#print '\n\t'.join([repr(x) for x in l_beacon])
 	
-
 def BleAdvertise():
 	print "Advertising..."
 	subprocess.Popen("hcitool -i hci0 cmd 0x08 0x0008 1e 02 01 1a 1a ff 4c 00 02 15 e2 c5 6d b5 df fb 48 d2 b0 60 d0 f5 a7 10 96 e0 00 00 00 00 c5 00 00 00 00 00 00 00 00 00 00 00 00 00",shell=True)
 	proc = subprocess.Popen(["hciconfig", "hci0", "leadv", "0"])
-	t = threading.Timer(0.1, undoAdv, [proc])
+	t = threading.Timer(ADV_TIME, adv_undo, [proc])
 	t.start()
 	t.join()
 	print "Advertise Finish"
 	t.cancle()
 
+def getDevicePktList():
+	tmp = []
+	for x in l_device
+		tmp.append(x)
+		l_device.remove(x)
+	return tmp
+
+def getBeaconPktList():
+	tmp = []
+	for x in l_device
+		tmp.append(x)
+		l_beacon.remove(x)
+	return tmp
 
 def main():
 
 	sock = BleConfig()
 	BleScan(sock)
 	
-	time.sleep(0.1)
 	if PKT_QUEUE.empty():
 		print "No data!"
 		
-	l_device = []
-	l_beacon = []
-	while not PKT_QUEUE.empty():
-		Str = parse_events()
-		print len(Str)
-		if len(Str) == 7 :
-			l_device.append(Str)
-		elif len(Str) == 6:
-			l_beacon.append(Str)
 	
+	dev = getDevicePktList();
+	bea = getBeaconPktList();
 	print 'Devices',
-	print '\n\t'.join([repr(x) for x in l_device])
+	print '\n\t'.join([repr(x) for x in dev])
 	print 'Beacons',
-	print '\n\t'.join([repr(x) for x in l_beacon])
+	print '\n\t'.join([repr(x) for x in bea])
+	
+	print len(l_device)
+	print len(l_beacon)
+	
+	
 	#BleAdvertise()
 
 	print "done"
