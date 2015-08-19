@@ -346,6 +346,7 @@ def BleScan(sock):
 	#print '\n\t'.join([repr(x) for x in l_device])
 	#print 'Beacons',
 	#print '\n\t'.join([repr(x) for x in l_beacon])
+	return len(l_beacon)+len(l_device)
 	
 def BleAdvertise():
 	print "Advertising..."
@@ -370,9 +371,9 @@ def resetPktList():
 def main():
 
 	sock = BleConfig()
-	BleScan(sock)
+	n = BleScan(sock)
 	
-	if PKT_QUEUE.empty():
+	if n == 0:
 		print "No data!"
 		
 	
