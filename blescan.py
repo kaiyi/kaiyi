@@ -17,6 +17,7 @@ DEBUG = False
 
 import os
 import sys
+import time
 import struct
 import bluetooth._bluetooth as bluez
 
