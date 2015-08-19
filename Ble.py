@@ -287,6 +287,7 @@ def BleConfig():
 def BleScan(sock):
 
 	SCANLOOP = 1
+	print SCANLOOP
 	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
 	
 	# perform a device inquiry on bluetooth device #0
@@ -374,8 +375,8 @@ def main():
 	
 	resetPktList()
 	
-	print len(l_device)
-	print len(l_beacon)
+	#print len(l_device)
+	#print len(l_beacon)
 		
 	
 	#BleAdvertise()
