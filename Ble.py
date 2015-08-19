@@ -359,7 +359,7 @@ def main():
 	sock = BleConfig()
 	BleScan(sock)
 	
-		
+	time.sleep(0.1)
 	if PKT_QUEUE.empty():
 		print "No data!"
 		
