@@ -387,7 +387,7 @@ def main():
 	print '\n\t'.join(l_device)
 	print 'Beacons',
 	print '\n\t'.join(l_beacon)
-	BleAdvertise()
+	#BleAdvertise()
 
 	print "done"
 
