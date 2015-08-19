@@ -291,25 +291,27 @@ def ble_scan(sock):
 	#myFullList = []
 	#for i in range(0, loop_count):
 	
-	#SYS_TIME = time.time()
-	#cur_time = time.time()
+	SYS_TIME = time.time()
+	cur_time = time.time()
 		
 	while 1:
 		#print ( cur_time - SYS_TIME )
-		#if ( cur_time - SYS_TIME >= SCAN_TIME ):
-			#break
+		if ( cur_time - SYS_TIME >= SCAN_TIME ):
+			break
 		pkt = sock.recv(255)
+		print "\tfullpacket: ", printpacket(pkt)
 		PKT_QUEUE.put(pkt)
 		#print ble_data
-		#cur_time = time.time()
+		cur_time = time.time()
 		
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 #----------------------------------------------------------------------
 
 def ScanTimeout( p ):
-	if p.poll() is None:
+	if p.isAlive:
 		print "Go Terminate pid=%d"%p.pid
-		os.kill(p.pid, signal.SIGINT)
+		#os.kill(p.pid, signal.SIGINT)
+		p.
 
 def AdvUndo( p ):
 	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
@@ -336,10 +338,6 @@ def BleScan(sock):
 	th = threading.Thread(target=ble_scan,args=sock)
 	th.start()
 	
-	t = threading.Timer(SCAN_TIME, ScanTimeout, [th])
-	t.start()
-	t.join()
-	th.wait()
 	print "Scan Finish."
 	t.cancel()
 	
