@@ -62,7 +62,7 @@ SYS_TIME = 0
 PKT_QUEUE = Queue.Queue()
 l_device = []
 l_beacon = []
-SCAN = 0
+SCANLOOP = 0
 
 def returnnumberpacket(pkt):
 	myInteger = 0
@@ -260,9 +260,9 @@ def init_ble():
 
 #----------------------------------------------------------------------
 def ble_scan(sock):
-	print SCAN 
-	while ( SCAN == 1 ):
-		print SCAN
+	print SCANLOOP
+	while ( SCANLOOP == 1 ):
+		print SCANLOOP
 		pkt = sock.recv(255)
 		print "\tfullpacket: ", printpacket(pkt)
 		PKT_QUEUE.put(pkt)
@@ -270,7 +270,7 @@ def ble_scan(sock):
 def scan_undo( p ):
 	#if p.isAlive():
 	print "kill scan thread"
-	SCAN = 0
+	SCANLOOP = 0
 	
 def adv_undo( p ):
 	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
@@ -285,6 +285,8 @@ def BleConfig():
 	return sock
 
 def BleScan(sock):
+
+	SCANLOOP = 1
 	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
 	
 	# perform a device inquiry on bluetooth device #0
@@ -308,7 +310,7 @@ def BleScan(sock):
 		#PKT_QUEUE.put(pkt)
 		#print ble_data
 		#cur_time = time.time()
-	SCAN = 1
+	
 	th = threading.Thread(target=ble_scan,args=[sock])
 	th.start()
 	
