@@ -45,6 +45,9 @@ ADV_SCAN_IND=0x02
 ADV_NONCONN_IND=0x03
 ADV_SCAN_RSP=0x04
 
+ADV_TIME = 0.1
+SCAN_TIME = 0.9
+SYS_TIME = 0.0
 
 def returnnumberpacket(pkt):
 	myInteger = 0
@@ -190,6 +193,9 @@ def extract_device_data(pkt):
 	return Adstring
 
 def parse_events(sock, loop_count=100):
+	SYS_TIME = time.time()
+	print "cur time:"
+	print SYS_TIME
 	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
 	
 	# perform a device inquiry on bluetooth device #0
@@ -204,6 +210,12 @@ def parse_events(sock, loop_count=100):
 	results = []
 	myFullList = []
 	for i in range(0, loop_count):
+		
+		cur_time = time.time()
+		print "cur time:"
+		print cur_time
+		if( cur_time - SYS_TIME > SCAN_TIME )
+			break
 		pkt = sock.recv(255)
 		ptype, event, plen = struct.unpack("BBB", pkt[:3])
 		#print "--------------" 

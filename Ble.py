@@ -8,10 +8,12 @@ import bluetooth._bluetooth as bluez
 from subprocess import PIPE, STDOUT
 
 #class Ble:
+DEV_ID = 0
+
 
 def init_ble():
 	try:
-		sock = bluez.hci_open_dev(devid)
+		sock = bluez.hci_open_dev(DEV_ID)
 		print "ble thread started"
 	except:
 		print "error accessing bluetooth device..."
@@ -57,7 +59,7 @@ def BleScan():
 	print "Scanning..."
 	with open("result.txt","w")as f:
 		proc = subprocess.Popen(["hcitool", "lescan"], stdout=f)
-		t = threading.Timer(0.9, ScanTimeout, [proc])
+		t = threading.Timer(scanTime, ScanTimeout, [proc])
 		t.start()
 		t.join()
 		proc.wait()
