@@ -92,6 +92,7 @@ def BleStart():
 
 def main():
 
+	BleConfig()
 	sock = init_ble()
 	rssiDict = ble_scan(sock, 2000)
 
