@@ -100,9 +100,11 @@ def main():
 	SYS_TIME = time.time()
 	cur_time = time.time()
 	while 1:
+		print ( cur_time - SYS_TIME )
 		if ( cur_time - SYS_TIME >= SCAN_TIME ):
 			break
 		rssiDict = ble_scan(sock, 5)
+		cur_time = time.time()
 
 	beaconidList = list()
 	rssiList = list()
