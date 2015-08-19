@@ -103,7 +103,7 @@ def main():
 		print ( cur_time - SYS_TIME )
 		if ( cur_time - SYS_TIME >= SCAN_TIME ):
 			break
-		rssiDict = ble_scan(sock, 5)
+		rssiDict = ble_scan(sock, 1)
 		cur_time = time.time()
 
 	beaconidList = list()
