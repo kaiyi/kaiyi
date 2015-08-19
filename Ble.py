@@ -264,7 +264,7 @@ def ble_scan():
 	PKT_QUEUE.put(pkt)
 
 def scan_undo( p ):
-	if p.isAlife:
+	if p.isAlife():
 		Sys.exit()
 	
 def adv_undo( p ):
