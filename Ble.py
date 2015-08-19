@@ -354,19 +354,19 @@ def main():
 	if PKT_QUEUE.empty():
 		print "No data!"
 		
-	
-	dev = getDevicePktList();
-	bea = getBeaconPktList();
-	print 'Devices',
-	print '\n\t'.join([repr(x) for x in dev])
-	print 'Beacons',
-	print '\n\t'.join([repr(x) for x in bea])
-	
-	resetPktList()
-	
-	print len(l_device)
-	print len(l_beacon)
-	
+	while 1:
+		dev = getDevicePktList();
+		bea = getBeaconPktList();
+		print 'Devices',
+		print '\n\t'.join([repr(x) for x in dev])
+		print 'Beacons',
+		print '\n\t'.join([repr(x) for x in bea])
+		
+		resetPktList()
+		
+		print len(l_device)
+		print len(l_beacon)
+		
 	
 	#BleAdvertise()
 
