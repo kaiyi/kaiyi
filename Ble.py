@@ -322,15 +322,15 @@ def BleAdvertise():
 	t.cancle()
 
 def getDevicePktList():
-	tmp = l_device
+	return l_device
+
+def getBeaconPktList():	
+	return l_beacon
+
+def resetPktList():
 	del l_device[:]
-	return tmp
-
-def getBeaconPktList():
-	tmp = l_beacon
 	del l_beacon[:]
-	return tmp
-
+	
 def main():
 
 	sock = BleConfig()
@@ -346,6 +346,8 @@ def main():
 	print '\n\t'.join([repr(x) for x in dev])
 	print 'Beacons',
 	print '\n\t'.join([repr(x) for x in bea])
+	
+	resetPktList()
 	
 	print len(l_device)
 	print len(l_beacon)
