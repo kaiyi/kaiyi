@@ -318,15 +318,8 @@ def BleScan(sock):
 			PKT_QUEUE.put(pkt)
 			#print ble_data
 			cur_time = time.time()
-		except sock.error, e:
-			err = e.args[0]
-			# this next if/else is a bit redundant, but illustrates how the
-			# timeout exception is setup
-			if err == 'timed out':
-				break
-			else:
-				print e
-				break
+		except:
+			break
 		
 	
 	#th = threading.Thread(target=ble_scan,args=[sock])
