@@ -214,7 +214,7 @@ def parse_events(sock, loop_count=100):
 		cur_time = time.time()
 		print "time:"
 		print ( cur_time - SYS_TIME )
-		if( cur_time - SYS_TIME > SCAN_TIME ):
+		if( cur_time - SYS_TIME >= SCAN_TIME ):
 			break
 		pkt = sock.recv(255)
 		ptype, event, plen = struct.unpack("BBB", pkt[:3])
