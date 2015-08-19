@@ -268,7 +268,7 @@ def ble_scan(sock):
 def scan_undo( p ):
 	if p.isAlive():
 		print "kill scan thread"
-		sys.exit()
+		p.exit()
 	
 def adv_undo( p ):
 	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
@@ -311,11 +311,11 @@ def BleScan(sock):
 	
 	t = threading.Timer(SCAN_TIME, scan_undo, [th])
 	t.start()
-	th.join(SCAN_TIME)
+	#th.join()
 	t.join()
 
 	print "Scan Finish"
-	#t.cancle()
+	t.cancle()
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	
 	while not PKT_QUEUE.empty():
