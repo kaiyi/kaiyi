@@ -311,7 +311,7 @@ def ScanTimeout( p ):
 	if p.isAlive:
 		print "Go Terminate pid=%d"%p.pid
 		#os.kill(p.pid, signal.SIGINT)
-		p.
+		#p.
 
 def AdvUndo( p ):
 	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
