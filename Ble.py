@@ -322,17 +322,13 @@ def BleAdvertise():
 	t.cancle()
 
 def getDevicePktList():
-	tmp = []
-	for x in l_device:
-		tmp.append(x)
-		l_device.remove(x)
+	tmp = l_device
+	del l_device[:]
 	return tmp
 
 def getBeaconPktList():
-	tmp = []
-	for x in l_device:
-		tmp.append(x)
-		l_beacon.remove(x)
+	tmp = l_beacon
+	del l_beacon[:]
 	return tmp
 
 def main():
