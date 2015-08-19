@@ -93,7 +93,7 @@ def BleStart():
 def main():
 
 	sock = init_ble()
-	rssiDict = ble_scan(sock, 20)
+	rssiDict = ble_scan(sock, 2000)
 
 	beaconidList = list()
 	rssiList = list()
