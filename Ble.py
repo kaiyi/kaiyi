@@ -335,7 +335,7 @@ def BleScan(sock):
 		#proc.wait()
 		#print "Scan Finish."
 		#t.cancel()
-	th = threading.Thread(target=ble_scan,args=sock)
+	th = threading.Thread(target=ble_scan,args=[sock])
 	th.start()
 	
 	print "Scan Finish."
