@@ -326,20 +326,31 @@ def BleConfig():
 	return sock
 
 def BleScan(sock):
-	print "Scanning..."
-	#with open("result.txt","w")as f:
-		#proc = subprocess.Popen(["hcitool", "lescan"], stdout=f)
-		#t = threading.Timer(scanTime, ScanTimeout, [proc])
-		#t.start()
-		#t.join()
-		#proc.wait()
-		#print "Scan Finish."
-		#t.cancel()
-	th = threading.Thread(target=ble_scan,args=[sock])
-	th.start()
+	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
 	
-	print "Scan Finish."
-	#t.cancel()
+	# perform a device inquiry on bluetooth device #0
+	# The inquiry should last 8 * 1.28 = 10.24 seconds
+	# before the inquiry is performed, bluez should flush its cache of
+	# previously discovered devices
+	flt = bluez.hci_filter_new()
+	bluez.hci_filter_all_events(flt)
+	bluez.hci_filter_set_ptype(flt, bluez.HCI_EVENT_PKT)
+	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, flt )
+	
+	SYS_TIME = time.time()
+	cur_time = time.time()
+		
+	while 1:
+		#print ( cur_time - SYS_TIME )
+		if ( cur_time - SYS_TIME >= SCAN_TIME ):
+			break
+		pkt = sock.recv(255)
+		print "\tfullpacket: ", printpacket(pkt)
+		PKT_QUEUE.put(pkt)
+		#print ble_data
+		cur_time = time.time()
+		
+	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	
 	
 
