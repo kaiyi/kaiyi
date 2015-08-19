@@ -123,7 +123,6 @@ def extract_beacon_data(pkt):
 		print "\tMINOR: ", printpacket(pkt[report_pkt_offset -4: report_pkt_offset - 2])
 		print "\tMAC address: ", packed_bdaddr_to_string(pkt[report_pkt_offset + 3:report_pkt_offset + 9])
 		# commented out - don't know what this byte is.  It's NOT TXPower
-		print "\tDevice Name: ", printpacket(pkt[report_pkt_offset - 5: report_pkt_offset - 3])
 		txpower, = struct.unpack("b", pkt[report_pkt_offset - 2])
 		print "\tTXpower(Unknown):", txpower
 		
