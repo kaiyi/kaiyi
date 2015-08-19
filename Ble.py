@@ -312,21 +312,21 @@ def BleScan(sock):
 		print ( cur_time - SYS_TIME )
 		if ( cur_time - SYS_TIME >= SCAN_TIME ):
 			#break
-		try:
-			pkt = sock.recv(255)
-			print "\tfullpacket: ", printpacket(pkt)
-			PKT_QUEUE.put(pkt)
-			print ble_data
-			cur_time = time.time()
-		except socket.timeout, e:
-			err = e.args[0]
-			# this next if/else is a bit redundant, but illustrates how the
-			# timeout exception is setup
-			if err == 'timed out':
-				break
-			else:
-				print e
-				break
+			try:
+				pkt = sock.recv(255)
+				print "\tfullpacket: ", printpacket(pkt)
+				PKT_QUEUE.put(pkt)
+				print ble_data
+				cur_time = time.time()
+			except socket.timeout, e:
+				err = e.args[0]
+				# this next if/else is a bit redundant, but illustrates how the
+				# timeout exception is setup
+				if err == 'timed out':
+					break
+				else:
+					print e
+					break
 		
 	
 	#th = threading.Thread(target=ble_scan,args=[sock])
