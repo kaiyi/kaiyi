@@ -59,7 +59,7 @@ ADV_TIME = 0.1
 SCAN_TIME = 0.9
 SYS_TIME = 0
 
-PKT_QUEUE = Queue()
+PKT_QUEUE = Queue.Queue()
 
 def returnnumberpacket(pkt):
 	myInteger = 0
