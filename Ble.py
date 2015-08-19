@@ -9,7 +9,9 @@ from subprocess import PIPE, STDOUT
 
 #class Ble:
 DEV_ID = 0
-
+ADV_TIME = 0.1
+SCAN_TIME = 0.9
+SYS_TIME = 0
 
 def init_ble():
 	try:
@@ -94,7 +96,13 @@ def main():
 
 	BleConfig()
 	sock = init_ble()
-	rssiDict = ble_scan(sock, 20)
+	
+	SYS_TIME = time.time()
+	cur_time = time.time()
+	while 1:
+		if ( cur_time - SYS_TIME >= SCAN_TIME ):
+			break
+		rssiDict = ble_scan(sock, 5)
 
 	beaconidList = list()
 	rssiList = list()
