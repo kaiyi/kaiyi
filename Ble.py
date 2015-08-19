@@ -247,7 +247,7 @@ def parse_events():
 
 				#print "fullpacket: ", printpacket(pkt)
 				name = returnstringpacket( pkt[12:-22]).decode('hex')
-				print name
+				#print name
 				if ( name == "User" ):
 					Adstring = extract_device_data(pkt)
 				else:
@@ -258,7 +258,7 @@ def parse_events():
 				#myFullList.append(Adstring)
 			#done = True
 	#sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
-	return Adstring
+	return Adstring.split(",")
 
 
 def init_ble():
@@ -345,7 +345,7 @@ def BleScan(sock):
 		if ( cur_time - SYS_TIME >= SCAN_TIME ):
 			break
 		pkt = sock.recv(255)
-		print "\tfullpacket: ", printpacket(pkt)
+		#print "\tfullpacket: ", printpacket(pkt)
 		PKT_QUEUE.put(pkt)
 		#print ble_data
 		cur_time = time.time()
@@ -374,12 +374,20 @@ def main():
 	if PKT_QUEUE.empty():
 		print "No data!"
 		
-	
+	l_device = []
+	l_beacon = []
 	while not PKT_QUEUE.empty():
 		Str = parse_events()
-		print Str 
-		
-	#BleAdvertise()
+		if len(Str) == 7 :
+			l_device.append(Str)
+		elif len(Str) == 4:
+			l_beacon.append(Str)
+	
+	print 'Devices',
+	print '\n\t'.join(l_device)
+	print 'Beacons',
+	print '\n\t'.join(l_beacon)
+	BleAdvertise()
 
 	print "done"
 
