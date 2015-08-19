@@ -210,7 +210,10 @@ def parse_events(sock):
 			
 	pkt = sock.recv(255)
 	ptype, event, plen = struct.unpack("BBB", pkt[:3])
-	#print "--------------" 
+	#print "--------------"
+	
+	Adstring = ""
+	
 	if event == bluez.EVT_INQUIRY_RESULT_WITH_RSSI:
 		i =0
 	elif event == bluez.EVT_NUM_COMP_PKTS:
