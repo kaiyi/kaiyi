@@ -309,10 +309,10 @@ def BleScan(sock):
 	th = threading.Thread(target=ble_scan,args=[sock])
 	th.start()
 	
-	#t = threading.Timer(SCAN_TIME, scan_undo, [th])
-	#t.start()
-	#th.wait()
-	#t.join()
+	t = threading.Timer(SCAN_TIME, scan_undo, [th])
+	t.start()
+	th.join(SCAN_TIME)
+	t.join()
 
 	print "Scan Finish"
 	#t.cancle()
@@ -359,7 +359,6 @@ def main():
 	if PKT_QUEUE.empty():
 		print "No data!"
 		
-	#while 1:
 	
 	dev = getDevicePktList();
 	bea = getBeaconPktList();
