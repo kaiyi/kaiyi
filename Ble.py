@@ -309,29 +309,21 @@ def BleScan(sock):
 	cur_time = time.time()
 		
 	while 1:
-		print ( cur_time - SYS_TIME )
+		#print ( cur_time - SYS_TIME )
 		if ( cur_time - SYS_TIME >= SCAN_TIME ):
 			break
 		try:
 			pkt = sock.recv(255)
-			print "\tfullpacket: ", printpacket(pkt)
+			#print "\tfullpacket: ", printpacket(pkt)
 			PKT_QUEUE.put(pkt)
 			#print ble_data
 			cur_time = time.time()
 		except:
 			break
-		
-	
-	#th = threading.Thread(target=ble_scan,args=[sock])
-	#th.start()
-	
-	#t = threading.Timer(SCAN_TIME, scan_undo, [th])
-	#t.start()
-	#th.join()
-	#t.join()
+
 
 	print "Scan Finish"
-	#t.cancle()
+	
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	
 	while not PKT_QUEUE.empty():
