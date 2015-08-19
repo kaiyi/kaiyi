@@ -310,7 +310,7 @@ def BleScan(sock):
 	t.join()
 
 	print "Scan Finish"
-	t.cancle()
+	#t.cancle()
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	
 	while not PKT_QUEUE.empty():
