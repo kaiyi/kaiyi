@@ -305,10 +305,11 @@ def BleScan(sock):
 		#print ble_data
 		#cur_time = time.time()
 	th = threading.Thread(target=ble_scan,args=[sock])
+	th.start()
 	
 	t = threading.Timer(SCAN_TIME, scan_undo, [th])
 	t.start()
-	th.wait()
+	#th.wait()
 	t.join()
 
 	print "Scan Finish"
