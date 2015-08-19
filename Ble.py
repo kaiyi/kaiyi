@@ -371,28 +371,30 @@ def resetPktList():
 def main():
 
 	sock = BleConfig()
-	n = BleScan(sock)
 	
-	if n == 0:
-		print "No data!"
+	while 1:
+		n = BleScan(sock)
 		
-	
-	dev = getDevicePktList();
-	bea = getBeaconPktList();
-	print 'Devices',
-	print '\n\t'.join([repr(x) for x in dev])
-	print 'Beacons',
-	print '\n\t'.join([repr(x) for x in bea])
-	
-	resetPktList()
-	
-	#print len(l_device)
-	#print len(l_beacon)
+		if n == 0:
+			print "No data!"
+			
 		
-	
-	#BleAdvertise()
+		dev = getDevicePktList();
+		bea = getBeaconPktList();
+		print 'Devices',
+		print '\n\t'.join([repr(x) for x in dev])
+		print 'Beacons',
+		print '\n\t'.join([repr(x) for x in bea])
+		
+		resetPktList()
+		
+		#print len(l_device)
+		#print len(l_beacon)
+			
+		
+		BleAdvertise()
 
-	print "done"
+		print "done"
 
 
 
