@@ -268,7 +268,7 @@ def ble_scan(sock):
 def scan_undo( p ):
 	if p.isAlive():
 		print "kill scan thread"
-		Sys.exit()
+		sys.exit()
 	
 def adv_undo( p ):
 	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
