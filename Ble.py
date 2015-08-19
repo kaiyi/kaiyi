@@ -294,12 +294,12 @@ def ble_scan(sock):
 	#SYS_TIME = time.time()
 	#cur_time = time.time()
 		
-	#while 1:
+	while 1:
 		#print ( cur_time - SYS_TIME )
 		#if ( cur_time - SYS_TIME >= SCAN_TIME ):
 			#break
-	pkt = sock.recv(255)
-	PKT_QUEUE.put(pkt)
+		pkt = sock.recv(255)
+		PKT_QUEUE.put(pkt)
 		#print ble_data
 		#cur_time = time.time()
 		
