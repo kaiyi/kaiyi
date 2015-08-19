@@ -260,16 +260,17 @@ def init_ble():
 
 #----------------------------------------------------------------------
 def ble_scan(sock):
-
+	print SCAN 
 	while SCAN:
+		print SCAN 
 		pkt = sock.recv(255)
 		print "\tfullpacket: ", printpacket(pkt)
 		PKT_QUEUE.put(pkt)
 
 def scan_undo( p ):
-	if p.isAlive():
-		print "kill scan thread"
-		SCAN = False
+	#if p.isAlive():
+	print "kill scan thread"
+	SCAN = False
 	
 def adv_undo( p ):
 	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
