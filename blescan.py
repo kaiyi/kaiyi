@@ -195,8 +195,7 @@ def extract_device_data(pkt):
 
 def parse_events(sock, loop_count=100):
 	SYS_TIME = time.time()
-	print "cur time:"
-	print SYS_TIME
+
 	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
 	
 	# perform a device inquiry on bluetooth device #0
@@ -213,8 +212,8 @@ def parse_events(sock, loop_count=100):
 	for i in range(0, loop_count):
 		
 		cur_time = time.time()
-		print "cur time:"
-		print cur_time
+		print "time:"
+		print ( cur_time - SYS_TIME )
 		if( cur_time - SYS_TIME > SCAN_TIME ):
 			break
 		pkt = sock.recv(255)
