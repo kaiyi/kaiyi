@@ -258,7 +258,7 @@ def init_ble():
 	
 
 #----------------------------------------------------------------------
-def ble_scan():
+def ble_scan(sock):
 	pkt = sock.recv(255)
 	print "\tfullpacket: ", printpacket(pkt)
 	PKT_QUEUE.put(pkt)
