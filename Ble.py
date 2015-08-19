@@ -260,17 +260,22 @@ def init_ble():
 
 #----------------------------------------------------------------------
 def ble_scan(sock):
-	print SCANLOOP
-	while ( SCANLOOP == 1 ):
-		print SCANLOOP
+	SYS_TIME = time.time()
+	cur_time = time.time()
+		
+	while 1:
+		print ( cur_time - SYS_TIME )
+		if ( cur_time - SYS_TIME >= SCAN_TIME ):
+			#break
+	#while 1:
 		pkt = sock.recv(255)
 		print "\tfullpacket: ", printpacket(pkt)
 		PKT_QUEUE.put(pkt)
 
 def scan_undo( p ):
-	#if p.isAlive():
-	print "kill scan thread"
-	SCANLOOP = 0
+	if ( p.isAlive() && PKT_QUEUE.empty() ):
+		print "kill scan thread"
+		sys.exit()
 	
 def adv_undo( p ):
 	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
@@ -286,8 +291,6 @@ def BleConfig():
 
 def BleScan(sock):
 
-	SCANLOOP = 1
-	print SCANLOOP
 	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
 	
 	# perform a device inquiry on bluetooth device #0
