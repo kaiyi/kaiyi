@@ -339,7 +339,7 @@ def BleScan(sock):
 	th.start()
 	
 	print "Scan Finish."
-	t.cancel()
+	#t.cancel()
 	
 	
 
