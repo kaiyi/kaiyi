@@ -265,6 +265,7 @@ def ble_scan(sock):
 
 def scan_undo( p ):
 	if p.isAlive():
+		print "kill scan thread"
 		Sys.exit()
 	
 def adv_undo( p ):
@@ -307,6 +308,7 @@ def BleScan(sock):
 	
 	t = threading.Timer(SCAN_TIME, scan_undo, [th])
 	t.start()
+	th.wait()
 	t.join()
 
 	print "Scan Finish"
@@ -349,24 +351,24 @@ def resetPktList():
 def main():
 
 	sock = BleConfig()
-	
+	BleScan(sock)
 	
 	if PKT_QUEUE.empty():
 		print "No data!"
 		
-	while 1:
-		BleScan(sock)
-		dev = getDevicePktList();
-		bea = getBeaconPktList();
-		print 'Devices',
-		print '\n\t'.join([repr(x) for x in dev])
-		print 'Beacons',
-		print '\n\t'.join([repr(x) for x in bea])
-		
-		resetPktList()
-		
-		print len(l_device)
-		print len(l_beacon)
+	#while 1:
+	
+	dev = getDevicePktList();
+	bea = getBeaconPktList();
+	print 'Devices',
+	print '\n\t'.join([repr(x) for x in dev])
+	print 'Beacons',
+	print '\n\t'.join([repr(x) for x in bea])
+	
+	resetPktList()
+	
+	print len(l_device)
+	print len(l_beacon)
 		
 	
 	#BleAdvertise()
