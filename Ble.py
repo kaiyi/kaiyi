@@ -387,9 +387,9 @@ def main():
 			l_beacon.append(Str)
 	
 	print 'Devices',
-	print '\n\t'.join(l_device)
+	print '\n\t'.join([repr(x) for x in l_device])
 	print 'Beacons',
-	print '\n\t'.join(l_beacon)
+	print '\n\t'.join([repr(x) for x in l_beacon])
 	#BleAdvertise()
 
 	print "done"
