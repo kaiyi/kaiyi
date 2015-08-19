@@ -273,7 +273,7 @@ def ble_scan(sock):
 		PKT_QUEUE.put(pkt)
 
 def scan_undo( p ):
-	if ( p.isAlive() && PKT_QUEUE.empty() ):
+	if ( p.isAlive() and PKT_QUEUE.empty() ):
 		print "kill scan thread"
 		sys.exit()
 	
