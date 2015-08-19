@@ -220,10 +220,7 @@ def parse_events():
 	results = []
 	myFullList = []
 	#for i in range(0, loop_count):"""
-	
-	if PKT_QUEUE.empty()
-		print "No data!"
-		return
+
 		
 	pkt = PKT_QUEUE.get()
 	ptype, event, plen = struct.unpack("BBB", pkt[:3])
@@ -362,7 +359,12 @@ def main():
 	sock = BleConfig()
 	BleScan(sock)
 	
-	while not PKT_QUEUE.empty()
+		
+	if PKT_QUEUE.empty():
+		print "No data!"
+		
+	
+	while not PKT_QUEUE.empty():
 		Str = parse_events()
 		print Str 
 		
