@@ -264,14 +264,14 @@ def init_ble():
 		print "error accessing bluetooth device..."
 		sys.exit(1)
 
-	blescan.hci_le_set_scan_parameters(sock)
-	blescan.hci_enable_le_scan(sock)
+	hci_le_set_scan_parameters(sock)
+	hci_enable_le_scan(sock)
 
 	return sock
 
 def ble_scan(sock):
 	rssiDict = dict()
-	tmptuple = blescan.parse_events(sock).split(',')
+	tmptuple = parse_events(sock).split(',')
 	#for beacon in returnedList:
 		#tmptuple = beacon.split(',')
 	#print tmptuple
