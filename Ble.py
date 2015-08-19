@@ -271,6 +271,7 @@ def ble_scan(sock):
 		pkt = sock.recv(255)
 		print "\tfullpacket: ", printpacket(pkt)
 		PKT_QUEUE.put(pkt)
+		cur_time = time.time()
 
 def scan_undo( p ):
 	if ( p.isAlive() and PKT_QUEUE.empty() ):
