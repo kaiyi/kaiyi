@@ -266,7 +266,7 @@ def ble_scan(sock):
 	while 1:
 		print ( cur_time - SYS_TIME )
 		if ( cur_time - SYS_TIME >= SCAN_TIME ):
-			#break
+			break
 	#while 1:
 		pkt = sock.recv(255)
 		print "\tfullpacket: ", printpacket(pkt)
