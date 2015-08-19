@@ -264,7 +264,8 @@ def ble_scan():
 	PKT_QUEUE.put(pkt)
 
 def scan_undo( p ):
-	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
+	if p.isAlife:
+		Sys.exit()
 	
 def adv_undo( p ):
 	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
@@ -302,13 +303,14 @@ def BleScan(sock):
 		#PKT_QUEUE.put(pkt)
 		#print ble_data
 		#cur_time = time.time()
-	th = Thread(target=ble_scan,args=[sock])
+	th = threading.Thread(targrt=ble_scan,args=[sock])
 	
 	t = threading.Timer(SCAN_TIME, scan_undo, [th])
 	t.start()
 	t.join()
 
-	
+	print "Scan Finish"
+	t.cancle()
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	
 	while not PKT_QUEUE.empty():
