@@ -62,6 +62,7 @@ SYS_TIME = 0
 PKT_QUEUE = Queue.Queue()
 l_device = []
 l_beacon = []
+SCAN = False
 
 def returnnumberpacket(pkt):
 	myInteger = 0
@@ -260,7 +261,7 @@ def init_ble():
 #----------------------------------------------------------------------
 def ble_scan(sock):
 
-	while 1:
+	while SCAN:
 		pkt = sock.recv(255)
 		print "\tfullpacket: ", printpacket(pkt)
 		PKT_QUEUE.put(pkt)
@@ -268,7 +269,7 @@ def ble_scan(sock):
 def scan_undo( p ):
 	if p.isAlive():
 		print "kill scan thread"
-		p.exit()
+		SCAN = False
 	
 def adv_undo( p ):
 	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
@@ -306,6 +307,7 @@ def BleScan(sock):
 		#PKT_QUEUE.put(pkt)
 		#print ble_data
 		#cur_time = time.time()
+	SCAN = True
 	th = threading.Thread(target=ble_scan,args=[sock])
 	th.start()
 	
