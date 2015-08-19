@@ -254,12 +254,12 @@ def parse_events():
 					Adstring = extract_beacon_data(pkt)
 				
 				AdstringStr = Adstring.split(",")
-				print "\tAdstring=", Adstring
+				#print "\tAdstring=", Adstring
 				#myFullList.append(Adstring)
 			#done = True
 	#sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	
-	print AdstringStr
+	#print AdstringStr
 	return AdstringStr
 
 
@@ -380,7 +380,7 @@ def main():
 	l_beacon = []
 	while not PKT_QUEUE.empty():
 		Str = parse_events()
-		#print Str
+		print Str
 		if len(Str) == 7 :
 			l_device.append(Str)
 		elif len(Str) == 4:
