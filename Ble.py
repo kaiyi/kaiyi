@@ -260,7 +260,7 @@ def init_ble():
 #----------------------------------------------------------------------
 def ble_scan():
 	pkt = sock.recv(255)
-	#print "\tfullpacket: ", printpacket(pkt)
+	print "\tfullpacket: ", printpacket(pkt)
 	PKT_QUEUE.put(pkt)
 
 def scan_undo( p ):
@@ -349,12 +349,13 @@ def resetPktList():
 def main():
 
 	sock = BleConfig()
-	BleScan(sock)
+	
 	
 	if PKT_QUEUE.empty():
 		print "No data!"
 		
 	while 1:
+		BleScan(sock)
 		dev = getDevicePktList();
 		bea = getBeaconPktList();
 		print 'Devices',
