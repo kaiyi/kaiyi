@@ -302,7 +302,7 @@ def BleScan(sock):
 		#PKT_QUEUE.put(pkt)
 		#print ble_data
 		#cur_time = time.time()
-	th = thread.start_new_thread(ble_scan,(sock))
+	th = Thread(target=ble_scan,args=[sock])
 	
 	t = threading.Timer(SCAN_TIME, scan_undo, [th])
 	t.start()
