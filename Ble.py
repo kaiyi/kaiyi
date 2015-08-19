@@ -303,29 +303,42 @@ def BleScan(sock):
 	bluez.hci_filter_set_ptype(flt, bluez.HCI_EVENT_PKT)
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, flt )
 	
-	#SYS_TIME = time.time()
-	#cur_time = time.time()
+	sock.settimeout(SCAN_TIME)
+	
+	SYS_TIME = time.time()
+	cur_time = time.time()
 		
-	#while 1:
-		#print ( cur_time - SYS_TIME )
-		#if ( cur_time - SYS_TIME >= SCAN_TIME ):
+	while 1:
+		print ( cur_time - SYS_TIME )
+		if ( cur_time - SYS_TIME >= SCAN_TIME ):
 			#break
-		#pkt = sock.recv(255)
-		#print "\tfullpacket: ", printpacket(pkt)
-		#PKT_QUEUE.put(pkt)
-		#print ble_data
-		#cur_time = time.time()
+		try:
+			pkt = sock.recv(255)
+			print "\tfullpacket: ", printpacket(pkt)
+			PKT_QUEUE.put(pkt)
+			print ble_data
+			cur_time = time.time()
+		except socket.timeout, e:
+			err = e.args[0]
+			# this next if/else is a bit redundant, but illustrates how the
+			# timeout exception is setup
+			if err == 'timed out':
+				break
+			else:
+				print e
+				break
+		
 	
-	th = threading.Thread(target=ble_scan,args=[sock])
-	th.start()
+	#th = threading.Thread(target=ble_scan,args=[sock])
+	#th.start()
 	
-	t = threading.Timer(SCAN_TIME, scan_undo, [th])
-	t.start()
+	#t = threading.Timer(SCAN_TIME, scan_undo, [th])
+	#t.start()
 	#th.join()
-	t.join()
+	#t.join()
 
 	print "Scan Finish"
-	t.cancle()
+	#t.cancle()
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	
 	while not PKT_QUEUE.empty():
