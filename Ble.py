@@ -380,10 +380,10 @@ def main():
 	l_beacon = []
 	while not PKT_QUEUE.empty():
 		Str = parse_events()
-		print Str
+		print len(Str)
 		if len(Str) == 7 :
 			l_device.append(Str)
-		elif len(Str) == 4:
+		elif len(Str) == 6:
 			l_beacon.append(Str)
 	
 	print 'Devices',
