@@ -259,9 +259,11 @@ def init_ble():
 
 #----------------------------------------------------------------------
 def ble_scan(sock):
-	pkt = sock.recv(255)
-	print "\tfullpacket: ", printpacket(pkt)
-	PKT_QUEUE.put(pkt)
+
+	while 1:
+		pkt = sock.recv(255)
+		print "\tfullpacket: ", printpacket(pkt)
+		PKT_QUEUE.put(pkt)
 
 def scan_undo( p ):
 	if p.isAlive():
