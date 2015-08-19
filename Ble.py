@@ -258,7 +258,14 @@ def init_ble():
 	
 
 #----------------------------------------------------------------------
+def ble_scan():
+	pkt = sock.recv(255)
+	#print "\tfullpacket: ", printpacket(pkt)
+	PKT_QUEUE.put(pkt)
 
+def scan_undo( p ):
+	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
+	
 def adv_undo( p ):
 	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
 
@@ -283,19 +290,25 @@ def BleScan(sock):
 	bluez.hci_filter_set_ptype(flt, bluez.HCI_EVENT_PKT)
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, flt )
 	
-	SYS_TIME = time.time()
-	cur_time = time.time()
+	#SYS_TIME = time.time()
+	#cur_time = time.time()
 		
-	while 1:
+	#while 1:
 		#print ( cur_time - SYS_TIME )
-		if ( cur_time - SYS_TIME >= SCAN_TIME ):
-			break
-		pkt = sock.recv(255)
+		#if ( cur_time - SYS_TIME >= SCAN_TIME ):
+			#break
+		#pkt = sock.recv(255)
 		#print "\tfullpacket: ", printpacket(pkt)
-		PKT_QUEUE.put(pkt)
+		#PKT_QUEUE.put(pkt)
 		#print ble_data
-		cur_time = time.time()
-		
+		#cur_time = time.time()
+	th = thread.start_new_thread(ble_scan,(sock))
+	
+	t = threading.Timer(SCAN_TIME, scan_undo, [th])
+	t.start()
+	t.join()
+
+	
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	
 	while not PKT_QUEUE.empty():
