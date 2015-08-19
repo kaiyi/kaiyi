@@ -226,7 +226,7 @@ def parse_events():
 	ptype, event, plen = struct.unpack("BBB", pkt[:3])
 	#print "--------------"
 	
-	Adstring = ""
+	AdstringStr = ""
 	
 	if event == bluez.EVT_INQUIRY_RESULT_WITH_RSSI:
 		i =0
@@ -258,7 +258,9 @@ def parse_events():
 				#myFullList.append(Adstring)
 			#done = True
 	#sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
-	return Adstring.split(",")
+	AdstringStr = Adstring.split(",")
+	print AdstringStr
+	return AdstringStr
 
 
 def init_ble():
@@ -378,6 +380,7 @@ def main():
 	l_beacon = []
 	while not PKT_QUEUE.empty():
 		Str = parse_events()
+		#print Str
 		if len(Str) == 7 :
 			l_device.append(Str)
 		elif len(Str) == 4:
