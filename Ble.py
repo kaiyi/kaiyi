@@ -356,7 +356,7 @@ def BleAdvertise():
 	t.start()
 	t.join()
 	print "Advertise Finish"
-	t.cancle()
+	#t.cancle()
 
 def getDevicePktList():
 	return l_device
