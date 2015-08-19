@@ -242,11 +242,12 @@ def parse_events(sock):
 			for i in range(0, num_reports):
 
 				#print "fullpacket: ", printpacket(pkt)
-				
-				if ( pkt[9] == '\x1e' ):
-					Adstring = extract_beacon_data(pkt)
-				else:
+				name = returnstringpacket( pkt[12:-22]).decode('hex')
+				print name
+				if ( name == "User" ):
 					Adstring = extract_device_data(pkt)
+				else:
+					Adstring = extract_beacon_data(pkt)
 				
 
 				#print "\tAdstring=", Adstring
