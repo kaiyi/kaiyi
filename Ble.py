@@ -94,7 +94,7 @@ def main():
 
 	BleConfig()
 	sock = init_ble()
-	rssiDict = ble_scan(sock, 2)
+	rssiDict = ble_scan(sock, 20)
 
 	beaconidList = list()
 	rssiList = list()
