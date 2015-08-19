@@ -24,6 +24,7 @@ import signal
 import subprocess
 import bluetooth._bluetooth as bluez
 from subprocess import PIPE, STDOUT
+import Queue
 
 #class Ble:
 
@@ -57,6 +58,8 @@ DEV_ID = 0
 ADV_TIME = 0.1
 SCAN_TIME = 0.9
 SYS_TIME = 0
+
+PKT_QUEUE = Queue()
 
 def returnnumberpacket(pkt):
 	myInteger = 0
@@ -200,10 +203,10 @@ def extract_device_data(pkt):
 	
 	return Adstring
 
-def parse_events(sock):
+def parse_events():
 	
 
-	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
+	""""old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
 	
 	# perform a device inquiry on bluetooth device #0
 	# The inquiry should last 8 * 1.28 = 10.24 seconds
@@ -216,9 +219,13 @@ def parse_events(sock):
 	done = False
 	results = []
 	myFullList = []
-	#for i in range(0, loop_count):
-			
-	pkt = sock.recv(255)
+	#for i in range(0, loop_count):"""
+	
+	if PKT_QUEUE.empty()
+		print "No data!"
+		return
+		
+	pkt = PKT_QUEUE.get()
 	ptype, event, plen = struct.unpack("BBB", pkt[:3])
 	#print "--------------"
 	
@@ -252,10 +259,10 @@ def parse_events(sock):
 
 				#print "\tAdstring=", Adstring
 				#myFullList.append(Adstring)
-			done = True
-	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
+			#done = True
+	#sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
 	return Adstring
-#----------------------------------------------------------------------
+
 
 def init_ble():
 	try:
@@ -271,22 +278,36 @@ def init_ble():
 	return sock
 
 def ble_scan(sock):
-	rssiDict = dict()
-	tmptuple = parse_events(sock).split(',')
-	#for beacon in returnedList:
-		#tmptuple = beacon.split(',')
-	#print tmptuple
+
+	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
 	
-		#uuid = tmptuple[1].lower()
-		#print tmptuple[1][:4]
-		#minor = tmptuple[3]
-		#idnum = int(tmptuple[2])*100 + int(tmptuple[3])
-		#if (uuid == "1534516467ab3e49f9d6e29000000008"): 
-			#(uuid == 1534516467ab3e49f9d6e29000000008") and (int(minor) in minorlist):
-			#rssi = tmptuple[5]
-			#print idnum
-			#rssiDict[str(idnum)] = rssi
-	return tmptuple
+	# perform a device inquiry on bluetooth device #0
+	# The inquiry should last 8 * 1.28 = 10.24 seconds
+	# before the inquiry is performed, bluez should flush its cache of
+	# previously discovered devices
+	flt = bluez.hci_filter_new()
+	bluez.hci_filter_all_events(flt)
+	bluez.hci_filter_set_ptype(flt, bluez.HCI_EVENT_PKT)
+	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, flt )
+	#done = False
+	#results = []
+	#myFullList = []
+	#for i in range(0, loop_count):
+	
+	#SYS_TIME = time.time()
+	#cur_time = time.time()
+		
+	#while 1:
+		#print ( cur_time - SYS_TIME )
+		#if ( cur_time - SYS_TIME >= SCAN_TIME ):
+			#break
+	pkt = sock.recv(255)
+	PKT_QUEUE.put(pkt)
+		#print ble_data
+		#cur_time = time.time()
+		
+	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
+#----------------------------------------------------------------------
 
 def ScanTimeout( p ):
 	if p.poll() is None:
@@ -300,18 +321,30 @@ def BleConfig():
 	print "Configuring..."
 	os.popen("hciconfig hci0 down")
 	os.popen("hciconfig hci0 up")
+	
+	sock = init_ble()
 	print "Config Finish"
+	return sock
 
-def BleScan():
+def BleScan(sock):
 	print "Scanning..."
-	with open("result.txt","w")as f:
-		proc = subprocess.Popen(["hcitool", "lescan"], stdout=f)
-		t = threading.Timer(scanTime, ScanTimeout, [proc])
-		t.start()
-		t.join()
-		proc.wait()
-		print "Scan Finish."
-		t.cancel()
+	#with open("result.txt","w")as f:
+		#proc = subprocess.Popen(["hcitool", "lescan"], stdout=f)
+		#t = threading.Timer(scanTime, ScanTimeout, [proc])
+		#t.start()
+		#t.join()
+		#proc.wait()
+		#print "Scan Finish."
+		#t.cancel()
+	th = threading.Thread(target=ble_scan,args=(sock))
+	th.start()
+	
+	t = threading.Timer(SCAN_TIME, ScanTimeout, [th])
+	t.start()
+	print "Scan Finish."
+	t.cancel()
+	
+	
 
 def BleAdvertise():
 	print "Advertising..."
@@ -323,36 +356,17 @@ def BleAdvertise():
 	print "Advertise Finish"
 	t.cancle()
 
-def BleStart():
-	while 1:
-		BleConfig()
-		BleScan()
-
-		print "Result..."
-		with open("result.txt","r") as f:
-			for line in f:
-				print line
-
-		BleAdvertise()
-
-		print "done"
 
 def main():
 
-	BleConfig()
-	sock = init_ble()
+	sock = BleConfig()
+	BleScan(sock)
 	
-	SYS_TIME = time.time()
-	cur_time = time.time()
-	while 1:
-		print ( cur_time - SYS_TIME )
-		if ( cur_time - SYS_TIME >= SCAN_TIME ):
-			break
-		ble_data = ble_scan(sock)
-		print ble_data
-		cur_time = time.time()
+	while not PKT_QUEUE.empty()
+		Str = parse_events()
+		print Str 
 		
-	BleAdvertise()
+	#BleAdvertise()
 
 	print "done"
 
