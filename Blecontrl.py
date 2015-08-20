@@ -18,6 +18,7 @@ DEBUG = False
 
 import os
 import sys
+import Queue
 import struct
 import bluetooth._bluetooth as bluez
 
