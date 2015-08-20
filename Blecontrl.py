@@ -19,7 +19,7 @@ DEBUG = False
 import os
 import sys
 import struct
-import bluetooth._bluetooth as blue
+import bluetooth._bluetooth as bluez
 
 LE_META_EVENT = 0x3e
 LE_PUBLIC_ADDRESS=0x00
