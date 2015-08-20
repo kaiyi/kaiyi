@@ -20,8 +20,8 @@ l_beacon = []
 
 def BleConfig():
 	print "Configuring..."
-	os.popen("hciconfig hci0 down")
-	os.popen("hciconfig hci0 up")
+	#os.popen("hciconfig hci0 down")
+	#os.popen("hciconfig hci0 up")
 	
 	sock = Blecontrl.init_ble()
 	print "Config Finish"

@@ -116,6 +116,7 @@ def hci_le_set_scan_parameters(sock):
 	SCAN_TYPE = 0x01
 
 def init_ble():
+
 	try:
 		sock = bluez.hci_open_dev(DEV_ID)
 		print "ble thread started"
