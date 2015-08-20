@@ -18,8 +18,10 @@ DEBUG = False
 
 import os
 import sys
+import time
 import Queue
 import struct
+import threading
 import bluetooth._bluetooth as bluez
 
 LE_META_EVENT = 0x3e

@@ -1,12 +1,4 @@
 import os
-import sys
-import struct
-import time
-import threading
-import signal
-import subprocess
-import bluetooth._bluetooth as bluez
-from subprocess import PIPE, STDOUT
 import Queue
 
 import Blecontrl
