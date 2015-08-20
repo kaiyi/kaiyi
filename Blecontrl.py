@@ -15,11 +15,11 @@ DEBUG = False
 # NOTE: Python's struct.pack() will add padding bytes unless you make the endianness explicit. Little endian
 # should be used for BLE. Always start a struct.pack() format string with "<"
 
+
 import os
 import sys
-import time
 import struct
-import bluetooth._bluetooth as bluez
+import bluetooth._bluetooth as blue
 
 LE_META_EVENT = 0x3e
 LE_PUBLIC_ADDRESS=0x00
@@ -46,6 +46,10 @@ ADV_SCAN_IND=0x02
 ADV_NONCONN_IND=0x03
 ADV_SCAN_RSP=0x04
 
+DEV_ID = 0
+ADV_TIME = 0.1
+SCAN_TIME = 0.9
+SYS_TIME = 0
 
 def returnnumberpacket(pkt):
 	myInteger = 0
@@ -111,7 +115,19 @@ def hci_le_set_scan_parameters(sock):
 	OWN_TYPE = SCAN_RANDOM
 	SCAN_TYPE = 0x01
 
+def init_ble():
+	try:
+		sock = bluez.hci_open_dev(DEV_ID)
+		print "ble thread started"
+	except:
+		print "error accessing bluetooth device..."
+		sys.exit(1)
 
+	hci_le_set_scan_parameters(sock)
+	hci_enable_le_scan(sock)
+
+	return sock
+	
 def extract_beacon_data(pkt):
 	report_pkt_offset = 0
 	
@@ -189,25 +205,9 @@ def extract_device_data(pkt):
 	
 	return Adstring
 
-def parse_events(sock):
-	
-
-	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
-	
-	# perform a device inquiry on bluetooth device #0
-	# The inquiry should last 8 * 1.28 = 10.24 seconds
-	# before the inquiry is performed, bluez should flush its cache of
-	# previously discovered devices
-	flt = bluez.hci_filter_new()
-	bluez.hci_filter_all_events(flt)
-	bluez.hci_filter_set_ptype(flt, bluez.HCI_EVENT_PKT)
-	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, flt )
-	done = False
-	results = []
-	myFullList = []
-	#for i in range(0, loop_count):
-			
-	pkt = sock.recv(255)
+def parse_events():
+		
+	pkt = PKT_QUEUE.get()
 	ptype, event, plen = struct.unpack("BBB", pkt[:3])
 	#print "--------------"
 	
@@ -231,16 +231,62 @@ def parse_events(sock):
 			for i in range(0, num_reports):
 
 				#print "fullpacket: ", printpacket(pkt)
-				
-				if ( pkt[9] == '\x1e' ):
-					Adstring = extract_beacon_data(pkt)
-				else:
+				name = returnstringpacket( pkt[12:-22]).decode('hex')
+				#print name
+				if ( name == "User" ):
 					Adstring = extract_device_data(pkt)
-				
+				else:
+					Adstring = extract_beacon_data(pkt)
 
-				#print "\tAdstring=", Adstring
-				#myFullList.append(Adstring)
-			done = True
+	return Adstring.split(",")
+
+def ble_scan(sock):
+
+	old_filter = sock.getsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, 14)
+	
+	# perform a device inquiry on bluetooth device #0
+	# The inquiry should last 8 * 1.28 = 10.24 seconds
+	# before the inquiry is performed, bluez should flush its cache of
+	# previously discovered devices
+	flt = bluez.hci_filter_new()
+	bluez.hci_filter_all_events(flt)
+	bluez.hci_filter_set_ptype(flt, bluez.HCI_EVENT_PKT)
+	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, flt )
+	
+	sock.settimeout(SCAN_TIME)
+	
+	PKT_QUEUE = Queue.Queue()
+
+	SYS_TIME = time.time()
+	cur_time = time.time()
+		
+	while 1:
+		#print ( cur_time - SYS_TIME )
+		if ( cur_time - SYS_TIME >= SCAN_TIME ):
+			break
+		try:
+			pkt = sock.recv(255)
+			#print "\tfullpacket: ", printpacket(pkt)
+			PKT_QUEUE.put(pkt)
+			#print ble_data
+			cur_time = time.time()
+		except:
+			break
+			
 	sock.setsockopt( bluez.SOL_HCI, bluez.HCI_FILTER, old_filter )
-	return Adstring
+		
+	return PKT_QUEUE
+
+def ble_adv()
+	subprocess.Popen("hcitool -i hci0 cmd 0x08 0x0008 1e 02 01 1a 1a ff 4c 00 02 15 e2 c5 6d b5 df fb 48 d2 b0 60 d0 f5 a7 10 96 e0 00 00 00 00 c5 00 00 00 00 00 00 00 00 00 00 00 00 00",shell=True)
+	proc = subprocess.Popen(["hciconfig", "hci0", "leadv", "0"])
+	t = threading.Timer(ADV_TIME, adv_undo, [proc])
+	t.start()
+	t.join()
+	
+	
+def adv_undo( p ):
+	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
+
+
 	
