@@ -5,7 +5,7 @@ def main():
 	mBle = Ble()
 	
 	while 1:
-		n = mBle.BleScan(sock)
+		n = mBle.BleScan()
 		
 		if n == 0:
 			print "No data!"
