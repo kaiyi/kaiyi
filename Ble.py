@@ -27,7 +27,7 @@ def BleScan(sock):
 	
 	
 	while not PKT_QUEUE.empty():
-		Str = Blecontrl.parse_events()
+		Str = Blecontrl.parse_events(PKT_QUEUE)
 		#print len(Str)
 		if len(Str) == 7 :
 			l_device.append(Str)

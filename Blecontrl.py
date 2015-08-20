@@ -209,7 +209,7 @@ def extract_device_data(pkt):
 	
 	return Adstring
 
-def parse_events():
+def parse_events(PKT_QUEUE):
 		
 	pkt = PKT_QUEUE.get()
 	ptype, event, plen = struct.unpack("BBB", pkt[:3])
