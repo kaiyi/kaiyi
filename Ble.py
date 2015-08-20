@@ -57,7 +57,7 @@ class Ble:
 		del self.l_device[:]
 		del self.l_beacon[:]
 #-----------------------------------------------		
-	def getDeviceRssiByName(self,name)
+	def getDeviceRssiByName(self,name):
 		rssi = "1"
 		for device in self.l_device:
 			print device[0]
@@ -66,7 +66,7 @@ class Ble:
 				break
 		return rssi
 	
-	def getBeaconRssiByMac(self,mac)
+	def getBeaconRssiByMac(self,mac):
 		rssi = "1"
 		for device in self.l_device:
 			print device[0]
@@ -75,7 +75,7 @@ class Ble:
 				break
 		return rssi
 
-	def getDevicePosByName(self,name)
+	def getDevicePosByName(self,name):
 		x = "-1"
 		y = "-1"
 		std = "-1"
