@@ -4,7 +4,7 @@ def main():
 
 	mBle = Ble()
 	
-	while 1:
+	for i in range(0,9):
 		n = mBle.BleScan()
 		
 		if n == 0:
@@ -18,7 +18,7 @@ def main():
 			print '\n\t'.join([repr(x) for x in bea])
 			
 		for device in dev:
-			print getDeviceRssiByName(device[0])
+			print mBle.getDeviceRssiByName(device[0])
 			
 		mBle.resetPktList()
 		
