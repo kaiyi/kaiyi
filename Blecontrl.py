@@ -22,6 +22,7 @@ import time
 import Queue
 import struct
 import threading
+import subprocess
 import bluetooth._bluetooth as bluez
 
 LE_META_EVENT = 0x3e
