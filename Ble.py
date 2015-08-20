@@ -56,8 +56,40 @@ class Ble:
 	def resetPktList(self):
 		del self.l_device[:]
 		del self.l_beacon[:]
-		
-	#def getDeviceRssiByName(self,name)
-		#for 
+#-----------------------------------------------		
+	def getDeviceRssiByName(self,name)
+		rssi = "1"
+		for device in self.l_device:
+			print device[0]
+			if name == device[0]:
+				rssi = device[6]
+				break
+		return rssi
+	
+	def getBeaconRssiByMac(self,mac)
+		rssi = "1"
+		for device in self.l_device:
+			print device[0]
+			if mac == device[0]:
+				rssi = device[5]
+				break
+		return rssi
 
-
+	def getDevicePosByName(self,name)
+		x = "-1"
+		y = "-1"
+		std = "-1"
+		floor = "-1"
+		trustVelue = "-1"
+		for device in self.l_device:
+			print device[0]
+			if name == device[0]:
+				x = device[1]
+				y = device[2]
+				std = device[3]
+				floor = device[4]
+				trustVelue = device[5]
+				break
+		return x, y, std, floor, trustVelue
+	
+	

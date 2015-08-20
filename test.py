@@ -17,6 +17,9 @@ def main():
 			print 'Beacons',
 			print '\n\t'.join([repr(x) for x in bea])
 			
+		for device in dev:
+			print getDeviceRssiByName(device[0])
+			
 		mBle.resetPktList()
 		
 		#print len(l_device)
