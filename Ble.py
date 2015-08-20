@@ -44,7 +44,7 @@ def BleScan(sock):
 	
 def BleAdvertise():
 	print "Advertising..."
-	ble_adv()
+	Blecontrl.ble_adv()
 	print "Advertise Finish"
 
 def getDevicePktList():
