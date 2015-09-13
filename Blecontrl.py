@@ -282,7 +282,19 @@ def ble_scan(sock):
 		
 	return PKT_QUEUE
 
-def ble_adv():
+def ble_adv(packet,name,cx,cy,stdev,floor,tvalue):
+
+	print "init packet: "+packet
+	
+	nameHexStr = name.encode("hex")
+	cxHexStr = float_to_hex(cx)
+	cyHexStr = float_to_hex(cy)
+	stdevHexStr = float_to_hex(stdev)
+	floorHexStr = hex(floor)
+	tValueHexStr = hex(tValue)
+	
+	print "name: "+nameHexStr+" cx: "+cxHexStr+" cy: "+cyHexStr+" std: "+stdevHexStr+" floor: "+floorHexStr+" tValue: "+tValueHexStr
+	
 	subprocess.Popen("hcitool -i hci0 cmd 0x08 0x0008 1e 02 01 1a 1a ff 4c 00 02 15 e2 c5 6d b5 df fb 48 d2 b0 60 d0 f5 a7 10 96 e0 00 00 00 00 c5 00 00 00 00 00 00 00 00 00 00 00 00 00",shell=True)
 	proc = subprocess.Popen(["hciconfig", "hci0", "leadv", "0"])
 	t = threading.Timer(ADV_TIME, adv_undo, [proc])
@@ -292,6 +304,9 @@ def ble_adv():
 	
 def adv_undo( p ):
 	subprocess.Popen(["hciconfig", "hci0", "noleadv"])
+
+def float_to_hex(f):
+		return hex(struct.unpack('<I', struct.pack('<f', f))[0])
 
 
 	
