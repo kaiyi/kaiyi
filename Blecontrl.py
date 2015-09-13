@@ -284,19 +284,26 @@ def ble_scan(sock):
 
 def ble_adv(name,cx,cy,stdev,floor,tvalue):
 
-	packet = "0x08 0x0008 1b 06 09 "
+	packet = "0x08 0x0008 1b 06 09"
 	print "init packet: "+packet
 	
 	nameHexStr = name.encode("hex")
 	cxHexStr = float_to_hex(cx)
 	cyHexStr = float_to_hex(cy)
 	stdevHexStr = float_to_hex(stdev)
-	floorHexStr = hex(floor)
+	floorHexStr = format(floor, '#06x')
 	tvalueHexStr = hex(tvalue)
 	
 	print "name: "+nameHexStr+" cx: "+cxHexStr+" cy: "+cyHexStr+" std: "+stdevHexStr+" floor: "+floorHexStr+" tValue: "+tvalueHexStr
 	
-	packet = packet + nameHexStr[0:2] +nameHexStr[2:4] + " " + nameHexStr[4:6] + " " + nameHexStr[6:8] + " " + nameHexStr[8:] + " "
+	packet = packet + " " + nameHexStr[0:2] + " " + nameHexStr[2:4] + " " + nameHexStr[4:6] + " " + nameHexStr[6:8] + " " + nameHexStr[8:]
+	packet = packet + " 13 ff 00 00"
+	packet = packet + " " + cxHexStr[-2:] + " " + cxHexStr[-4:-2] + " " + cxHexStr[-6:-4] + " " + cxHexStr[-8:-6]
+	packet = packet + " " + cyHexStr[-2:] + " " + cyHexStr[-4:-2] + " " + cyHexStr[-6:-4] + " " + cyHexStr[-8:-6]
+	packet = packet + " " + stdevHexStr[-2:] + " " + stdevHexStr[-4:-2] + " " + stdevHexStr[-6:-4] + " " + stdevHexStr[-8:-6]
+	packet = packet + " " + floorHexStr[-2:] + " " + floorHexStr[-4:-2]
+	
+	
 	
 	print packet
 	
