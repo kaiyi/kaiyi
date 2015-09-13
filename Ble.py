@@ -11,6 +11,7 @@ class Ble:
 		self.l_device = []
 		self.l_beacon = []
 		self.sock = Blecontrl.init_ble()
+		self.packet = "0x08 0x0008"
 
 	def BleConfig(self):
 		print "Configuring..."
@@ -42,9 +43,11 @@ class Ble:
 		#print '\n\t'.join([repr(x) for x in l_beacon])
 		return len(self.l_beacon)+len(self.l_device)
 	
-	def BleAdvertise(self):
+	def BleAdvertise(self,cx,cy,stdev,floor,tvalue):
 		print "Advertising..."
-		Blecontrl.ble_adv()
+		print "packet: "+self.packet
+		
+		Blecontrl.ble_adv(self.packet)
 		print "Advertise Finish"
 
 	def getDevicePktList(self):

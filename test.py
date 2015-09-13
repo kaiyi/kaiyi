@@ -26,7 +26,7 @@ def main():
 		#print len(l_beacon)
 			
 		
-		mBle.BleAdvertise()
+		#mBle.BleAdvertise()
 
 		print "done"
 		
