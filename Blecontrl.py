@@ -1,7 +1,7 @@
 #BLE iBeaconScanner based on https://github.com/adamf/BLE/blob/master/ble-scanner.py
 # JCS 06/07/14
 
-DEBUG = False
+DEBUG = True
 # BLE scanner based on https://github.com/adamf/BLE/blob/master/ble-scanner.py
 # BLE scanner, based on https://code.google.com/p/pybluez/source/browse/trunk/examples/advanced/inquiry-with-rssi.py
 
@@ -282,8 +282,9 @@ def ble_scan(sock):
 		
 	return PKT_QUEUE
 
-def ble_adv(packet,name,cx,cy,stdev,floor,tvalue):
+def ble_adv(name,cx,cy,stdev,floor,tvalue):
 
+	packet = "0x08 0x0008 1b 06 09 "
 	print "init packet: "+packet
 	
 	nameHexStr = name.encode("hex")
@@ -294,6 +295,10 @@ def ble_adv(packet,name,cx,cy,stdev,floor,tvalue):
 	tvalueHexStr = hex(tvalue)
 	
 	print "name: "+nameHexStr+" cx: "+cxHexStr+" cy: "+cyHexStr+" std: "+stdevHexStr+" floor: "+floorHexStr+" tValue: "+tvalueHexStr
+	
+	packet = packet + nameHexStr[2:3] + " " + nameHexStr[4:5] + " " + nameHexStr[6:7] + " " nameHexStr[8:9] + " "
+	
+	print packet
 	
 	subprocess.Popen("hcitool -i hci0 cmd 0x08 0x0008 1e 02 01 1a 1a ff 4c 00 02 15 e2 c5 6d b5 df fb 48 d2 b0 60 d0 f5 a7 10 96 e0 00 00 00 00 c5 00 00 00 00 00 00 00 00 00 00 00 00 00",shell=True)
 	proc = subprocess.Popen(["hciconfig", "hci0", "leadv", "0"])
