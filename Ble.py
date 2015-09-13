@@ -60,7 +60,7 @@ class Ble:
 	def getDeviceRssiByName(self,name):
 		rssi = "1"
 		for device in self.l_device:
-			print device[0]
+			#print device[0]
 			if name == device[0]:
 				rssi = device[6]
 				break
@@ -69,7 +69,7 @@ class Ble:
 	def getBeaconRssiByMac(self,mac):
 		rssi = "1"
 		for device in self.l_device:
-			print device[0]
+			#print device[0]
 			if mac == device[0]:
 				rssi = device[5]
 				break
@@ -82,7 +82,7 @@ class Ble:
 		floor = "-1"
 		trustVelue = "-1"
 		for device in self.l_device:
-			print device[0]
+			#print device[0]
 			if name == device[0]:
 				x = device[1]
 				y = device[2]
