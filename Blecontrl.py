@@ -296,7 +296,7 @@ def ble_adv(name,cx,cy,stdev,floor,tvalue):
 	
 	print "name: "+nameHexStr+" cx: "+cxHexStr+" cy: "+cyHexStr+" std: "+stdevHexStr+" floor: "+floorHexStr+" tValue: "+tvalueHexStr
 	
-	packet = packet + nameHexStr[2:3] + " " + nameHexStr[4:5] + " " + nameHexStr[6:7] + " " + nameHexStr[8:9] + " "
+	packet = packet + nameHexStr[0:2] +nameHexStr[2:4] + " " + nameHexStr[4:6] + " " + nameHexStr[6:8] + " " + nameHexStr[8:] + " "
 	
 	print packet
 	
